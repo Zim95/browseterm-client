@@ -5,5 +5,6 @@ const routes = {
     "create": "./src/pages/create/create.html"
 }
 
+
 const router = new Router(routes);
-router.initialize();
+router.route();

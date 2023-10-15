@@ -13,14 +13,43 @@ class Router {
         }
     }
 
+    extractScriptsFromContent(content) {
+        const scripts_regex = /<script\s+src="[^"]*"><\/script>/g;
+        const scripts = content.match(scripts_regex);
+        if(!scripts) {
+            return [];
+        }
+        const src_regex = /src="[^"]*"/g;
+        let srcs = [];
+        for (let script of scripts) {
+            srcs.push(
+                script.match(src_regex)[0].replace(
+                "src=", "").replace('"', "").replace('"', "")
+            );
+        }
+        return srcs;
+    }
+
+    loadScripts(scripts) {
+        for(let script of scripts) {
+            const scriptElement = document.createElement("script");
+            scriptElement.src = script;
+            document.body.appendChild(scriptElement);
+        }
+    }
+
     async loadContent(fileName) {
         try {
             const content = await this.fetchHTML(fileName);
             this.root.innerHTML = content;
+            // load script
+            const scripts = this.extractScriptsFromContent(content);
+            this.loadScripts(scripts);
         } catch (error) {
             console.log(error);
         }
     }
+
     route(defaultRoute="home", notFoundRoute="home") {
         const path = window.location.href.split("/").slice(3).join("/") || "/";
         const route_string = path.split("/")[0] || defaultRoute;
@@ -29,11 +58,6 @@ class Router {
         } else {
             this.loadContent(this.routes[notFoundRoute]);
         }
-    }
-
-    initialize() {
-        window.addEventListener("popstate", this.route.bind(this));
-        this.route();
     }
 }
 
