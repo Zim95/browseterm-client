@@ -1,0 +1,12 @@
+node_modules/
+scripts/
+.babelrc
+.gitignore
+Dockerfile
+journal.md
+LICENSE
+Makefile
+package-lock.json
+package.json
+README.md
+webpack.config.js
