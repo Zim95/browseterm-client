@@ -1,13 +1,11 @@
 # BrowseTerm Client
 Client for BrowseTerm
 
-# Building the JS Files
+# Running the Client
+- To run the client just hit:
+    ```
+    npm start
+    ```
 
-# Adding new Pages
-
-# Running the code locally
-
-
-# TODOS
-1. Add routing.
-2. ES6 functionality in pages->javascript.
+# TODO:
+- Hot reload is not working even when using webpack --hot.

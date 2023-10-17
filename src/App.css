@@ -1,0 +1,39 @@
+/* App.css */
+
+/* Create a container for the navbar and main content */
+.app-container {
+    display: flex; /* Use flexbox layout */
+  }
+  
+  /* Style the navbar */
+  .navbar {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+  }
+  
+  /* Style the navigation links in the navbar */
+  .nav-list {
+    list-style: none;
+    display: flex;
+  }
+  
+  .nav-item {
+    margin: 0 10px;
+  }
+  
+  .nav-item a {
+    text-decoration: none;
+    color: white;
+  }
+  
+  .nav-item a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Style the main content */
+  .main-content {
+    flex: 1; /* Allow the main content to take up the remaining space */
+    padding: 10px;
+  }
+  

@@ -1,10 +1,6 @@
-import { Router } from "./router";
+import {createRoot} from "react-dom/client";
+import React from "react";
+import { App } from "./App";
 
-const routes = {
-    "home": "./src/pages/home/home.html",
-    "create": "./src/pages/create/create.html"
-}
-
-
-const router = new Router(routes);
-router.route();
+const root = createRoot(document.getElementById("root"));
+root.render(<App/>);
