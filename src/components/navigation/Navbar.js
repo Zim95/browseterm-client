@@ -30,7 +30,7 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/container" className="nav-a">
+            <Link to="/containers" className="nav-a">
               <FontAwesomeIcon icon={faDocker} className="fas"/><span className="nav-span">Containers</span>
             </Link>
           </li>
