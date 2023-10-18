@@ -1,72 +1,78 @@
-/* Navbar.css */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.menu-btn {
+    position: fixed;
+    top: 25px;
+    left: 0px;
+    cursor: pointer;
+    z-index: 2;
+    background: #2c3e50; /* Add a background color */
+    border-radius: 50%; /* Makes it a circle */
+    padding: 10px;
+}
+
+.burger {
+    width: 30px;
+    height: 3px;
+    background: #2ecc71;
+    margin: 6px 0;
+    transition: 0.4s;
+}
 
 .navbar {
-    background-color: #2ecc71;
-    color: white;
-    padding: 10px;
-    width: 30%;
-    transition: width 0.3s ease-in-out;
-}
-  
-.navbar.expanded {
-    width: 10%;
-}
-  
-.navbar.retracted {
-    width: 2%;
+    position: fixed;
+    width: 200px;
+    height: 100%;
+    background: #2c3e50;
+    padding: 30px 0;
 }
 
-.navbar.retracted .nav-item a span {
-    display: none; /* Hide the text when retracted */
-  }
-  
-.navbar.retracted .nav-item a {
-    display: flex;
+.navbar .logo-area {
+    color: #2ecc71;
+    text-align: center;
+    margin-bottom: 30px;
 }
-  
-.toggle-button {
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
+
+.navbar .nav-list .nav-item {
+    padding: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-top: 1px solid rgba(225,225,225,0.05);
 }
-  
-.nav-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Align items to the left */
+
+.navbar .nav-list .nav-item:hover {
+    background: #34495e;
 }
-  
-.nav-item {
-    margin: 10px 0;
-    display: flex;
-    align-items: center;
+
+.navbar .nav-list .nav-item .nav-a {
+    color: #2ecc71;
+    display: block;
 }
-  
-.nav-item a {
-    text-decoration: none;
-    color: white;
-    font-family: 'Your Chosen Font', sans-serif; /* Change to your chosen font */
-    font-size: 16px;
-    font-weight: normal; /* Reset font-weight */
-    transition: color 0.3s, background-color 0.3s; /* Add background-color transition */
+
+.navbar .nav-list .nav-item .nav-span {
+    padding-left: 2%;
 }
-  
-.nav-item a:hover {
-    color: white;
-    font-weight: bold; /* Make text bolder on hover */
-    background-color: #27ae60; /* Highlight the background on hover */
+
+.navbar .nav-list .nav-item .nav-a .fas {
+    width: 25px;
 }
-  
-.toggle-button {
-    background-color: transparent;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
+
+/* retracted stuff */
+.retracted .navbar {
+    width: 50px; /* Adjust the width as needed */
 }
-  
+
+.retracted .navbar .nav-list .nav-item .nav-span {
+    display: none;
+}
+
+.retracted .navbar .logo-area {
+    display: none;
+}
+
+.retracted .menu-btn .burger {
+    width: 25px; /* Adjust the size as needed */
+}

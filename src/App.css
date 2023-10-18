@@ -1,39 +1,33 @@
-/* App.css */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
 
-/* Create a container for the navbar and main content */
-.app-container {
-    display: flex; /* Use flexbox layout */
-  }
-  
-  /* Style the navbar */
-  .navbar {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-  }
-  
-  /* Style the navigation links in the navbar */
-  .nav-list {
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     list-style: none;
-    display: flex;
-  }
-  
-  .nav-item {
-    margin: 0 10px;
-  }
-  
-  .nav-item a {
     text-decoration: none;
-    color: white;
-  }
-  
-  .nav-item a:hover {
-    text-decoration: underline;
-  }
-  
-  /* Style the main content */
-  .main-content {
-    flex: 1; /* Allow the main content to take up the remaining space */
-    padding: 10px;
-  }
-  
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background: #ecf0f1;
+
+}
+
+.wrapper {
+    display: flex;
+    position: relative;
+    transition: margin-left 0.4s;
+}
+
+/* App content */
+.wrapper .app-content {
+    flex: 1; /* This allows the content to take up the remaining space */
+    margin-left: 200px; /* Adjust the margin to match the width of your sidebar */
+    padding: 20px; /* Add padding as needed */
+    background: #ecf0f1; /* Set the background color if desired */
+}
+
+.wrapper.retracted .app-content {
+    margin-left: 50px; /* Adjust the margin to match the width of your retracted sidebar */
+}
