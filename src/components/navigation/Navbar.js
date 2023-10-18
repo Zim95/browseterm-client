@@ -25,22 +25,22 @@ function Navbar() {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/create" className="nav-a">
+            <Link to="/profile" className="nav-a">
               <FontAwesomeIcon icon={faUser} className="fas"/><span className="nav-span">Profile</span>
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/list" className="nav-a">
+            <Link to="/container" className="nav-a">
               <FontAwesomeIcon icon={faDocker} className="fas"/><span className="nav-span">Containers</span>
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/" className="nav-a">
+            <Link to="/subscribe" className="nav-a">
               <FontAwesomeIcon icon={faCartShopping} className="fas"/><span className="nav-span">Subscribe</span>
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/" className="nav-a">
+            <Link to="/signin" className="nav-a">
               <FontAwesomeIcon icon={faRightToBracket} className="fas"/><span className="nav-span">SignIn</span>
             </Link>
           </li>
