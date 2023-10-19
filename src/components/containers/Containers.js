@@ -1,8 +1,11 @@
 import React from 'react';
+import ContainersForm from './containers-form/ContainersForm';
 import "./Containers.css";
 
 function Containers() {
-  return <div>Containers Component</div>;
+  return (
+    <ContainersForm/>
+  );
 }
 
 export default Containers;
