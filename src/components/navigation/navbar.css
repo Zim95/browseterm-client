@@ -61,18 +61,22 @@
 }
 
 /* retracted stuff */
-.retracted .navbar {
+.navbar.retracted {
     width: 50px; /* Adjust the width as needed */
 }
 
-.retracted .navbar .nav-list .nav-item .nav-span {
+.navbar.retracted .nav-list .nav-item .nav-span {
     display: none;
 }
 
-.retracted .navbar .logo-area {
-    display: none;
+.navbar.retracted .logo-area {
+    font-size: 0;
 }
 
-.retracted .menu-btn .burger {
+.navbar.retracted .menu-btn {
+    left: 5px;
+}
+
+.navbar.retracted .menu-btn .burger {
     width: 25px; /* Adjust the size as needed */
 }

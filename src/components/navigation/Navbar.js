@@ -5,15 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faDocker} from "@fortawesome/free-brands-svg-icons";
 import { faBars, faHouse, faUser, faCartShopping, faRightToBracket } from '@fortawesome/free-solid-svg-icons'
 
-function Navbar() {
+function Navbar({onToggleRetraction}) {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
+    onToggleRetraction();
   };
 
   return (
-    <nav className={isExpanded ? "navbar retracted" : "navbar"}>
+    <nav className={isExpanded ? "navbar" : "navbar retracted"}>
       <div className="menu-btn" onClick={toggleExpand}>
           <span className="burger"><FontAwesomeIcon icon={faBars} className="fas"/></span>
       </div>

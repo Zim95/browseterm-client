@@ -11,10 +11,9 @@
 
 body {
     background: #ecf0f1;
-
 }
 
-.wrapper {
+.wrapper, .wrapper.retracted {
     display: flex;
     position: relative;
     transition: margin-left 0.4s;

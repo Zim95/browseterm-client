@@ -1,4 +1,4 @@
-import React, {Suspense} from "react";
+import React, {Suspense, useState} from "react";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 
 import "./App.css";
@@ -13,10 +13,16 @@ const SignIn = React.lazy(() => import('./components/signin/SignIn'));
 const Terminal = React.lazy(() => import('./components/terminal/Terminal'));
 
 function App() {
+    const [isNavbarRetracted, setIsNavbarRetracted] = useState(false);
+
+    const toggleNavbarRetraction = () => {
+        setIsNavbarRetracted(!isNavbarRetracted);
+    };
+
     return (
         <Router>
-            <div className="wrapper">
-                <Navbar/>
+            <div className={isNavbarRetracted? "wrapper retracted": "wrapper"}>
+                <Navbar onToggleRetraction={toggleNavbarRetraction}/>
                 <div className="app-content">
                     <Suspense fallback={<div>Loading....</div>}>
                         <Routes>
