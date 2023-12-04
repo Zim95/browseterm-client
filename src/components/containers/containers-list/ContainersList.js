@@ -1,23 +1,36 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ContainerListButtons from './container-list-buttons/ContainerListButtons';
 import './ContainersList.css';
 
-function ContainersList() {
+function ContainersList({containerData, removeContainer}) {
+    
     return (
         <div className="container-list">
             <table className="container-list-table">
-                <tr>
-                    <th>Container Name</th>
-                    <th>Image Name</th>
-                    <th>IP Address</th>
-                    <th></th>
-                </tr>
-                <tr>
-                    <td>test_container_ssh</td>
-                    <td>ubuntu</td>
-                    <td>172.10.0.1</td>
-                    <ContainerListButtons/>
-                </tr>
+                <thead>
+                    <tr>
+                        <th>Container ID</th>
+                        <th>Container Name</th>
+                        <th>Image Name</th>
+                        <th>IP Address</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        containerData.map((container) => {
+                            return (
+                                <tr>
+                                    <td>{container.id}</td>
+                                    <td>{container.name}</td>
+                                    <td>{container.image}</td>
+                                    <td>{container.ip}</td>
+                                    <ContainerListButtons removeContainer={removeContainer}/>
+                                </tr>
+                            );
+                        })
+                    }
+                </tbody>
             </table>
         </div>
     );

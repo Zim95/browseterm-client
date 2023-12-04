@@ -23,7 +23,7 @@ function ContainersForm({addContainer}) {
         );
     };
 
-    const createContainer = (event) => {
+    const createContainer = async (event) => {
         try {
             event.preventDefault();
             const userName = "zim95";
@@ -42,9 +42,8 @@ function ContainersForm({addContainer}) {
             }
             const postHeaders = config.DevAPIRequestsConfig.containerAPI.headers;
             const postUrl = config.DevAPIRequestsConfig.containerAPI.urls.baseURL + config.DevAPIRequestsConfig.containerAPI.urls.createContainerOffset;
-            console.log(postData, postHeaders, postUrl);
-            // const response = fetchCreateContainer(postUrl, postData, postHeaders);
-            // console.log(response);
+            const response = await fetchCreateContainer(postUrl, postData, postHeaders);
+            console.log(response.response);
             // addContainer(response);
         } catch (error) {
             console.error("Error create container", error);

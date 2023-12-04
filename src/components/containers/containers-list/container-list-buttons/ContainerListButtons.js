@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import "./ContainerListButtons.css";
 
-function ContainerListButtons() {
+function ContainerListButtons({removeContainer}) {
     const [containerState, setContainerState] = useState("stopped");
 
     const stopContainer = () => {
@@ -15,7 +15,8 @@ function ContainerListButtons() {
     };
 
     const deleteContainer = () => {
-        console.log("Deleting Container...")
+        console.log("Deleting Container...");
+        // removeContainer();
         setContainerState("deleted");
     };
 
@@ -29,33 +30,33 @@ function ContainerListButtons() {
                 className="button-container-button button-container-visit"
                 disabled={(containerState == "started" ? false: true)}
             >
-                <i className="fas fa-share"> Enter</i>
+                <i className="fas fa-share"></i>
             </button>
             <button
                 className="button-container-button button-container-start"
                 disabled={(containerState == "stopped" ? false: true)}
                 onClick={startContainer}
             >
-                <i className="fas fa-play"> Start</i>
+                <i className="fas fa-play"></i>
             </button>
             <button
                 className="button-container-button button-container-stop"
                 disabled={(containerState == "started" ? false: true)}
                 onClick={stopContainer}
             >
-                <i className="fas fa-stop"> Stop</i>
+                <i className="fas fa-stop"></i>
             </button>
             <button
                 className="button-container-button button-container-delete"
                 onClick={deleteContainer}
             >
-                <i className="fas fa-trash"> Delete</i>
+                <i className="fas fa-trash"></i>
             </button>
             <button
                 className="button-container-button button-container-save"
                 onClick={saveContainer}
             >
-                <i className="fas fa-save"> Save</i>
+                <i className="fas fa-save"></i>
             </button>
         </td>
     );
