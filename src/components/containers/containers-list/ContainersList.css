@@ -1,0 +1,22 @@
+.container-list-table {
+    font-family: 'Roboto', sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.container-list-table td, .container-list-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.container-list-table tr:nth-child(even){background-color: #f2f2f2;}
+
+.container-list-table tr:hover {background-color: #ddd;}
+
+.container-list-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #2ecc71;
+    color: #34495e;
+}

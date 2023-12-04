@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import "./ContainersForm.css";
 import config from '../../../config';
 
-function ContainersForm() {
+function ContainersForm({addContainer}) {
     const [formData, setFormData] = useState(
         {
             "image-name": "",
@@ -24,33 +24,76 @@ function ContainersForm() {
     };
 
     const createContainer = (event) => {
-        event.preventDefault();
-        console.log("Form Data:", formData);
+        try {
+            event.preventDefault();
+            const userName = "zim95";
+            const containerName = userName + "_" + formData["container-name"];
+            const containerNetwork = userName + "_network";
+            const postData = {
+                "image_name": formData["image-name"],
+                "container_name": containerName,
+                "container_network": containerNetwork,
+                "publish_information": {
+                    "22/tcp": 2222
+                },
+                "environment": {
+                    "SSH_PASSWORD": formData["container-password"],
+                }
+            }
+            const postHeaders = config.DevAPIRequestsConfig.containerAPI.headers;
+            const postUrl = config.DevAPIRequestsConfig.containerAPI.urls.baseURL + config.DevAPIRequestsConfig.containerAPI.urls.createContainerOffset;
+            console.log(postData, postHeaders, postUrl);
+            // const response = fetchCreateContainer(postUrl, postData, postHeaders);
+            // console.log(response);
+            // addContainer(response);
+        } catch (error) {
+            console.error("Error create container", error);
+        }    
+    };
+
+    const fetchCreateContainer = async(postContainerUrl, postContainerData, postContainerHeaders) => {
+        try {
+            const response = await fetch(
+                postContainerUrl,
+                {
+                    method: "POST",
+                    headers: postContainerHeaders,
+                    body: JSON.stringify(postContainerData),
+                }
+            );
+            if (!response.ok) {
+                throw new Error(`HTTP Error! ${response.text}`);
+            }
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            throw new Error(error);
+        }
+    };
+
+    const fetchImageOptions = async (imageOptionsUrl, imageOptionsHeaders) => {
+        try {
+            const response = await fetch(
+                imageOptionsUrl,
+                {
+                    method: "GET",
+                    headers: imageOptionsHeaders,
+                }
+            );
+            if (!response.ok) {
+                throw new Error("Network response error");
+            }
+            const data = await response.json();
+            setImageOptions(data.response);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        }
     };
 
     useEffect(() => {
         const imageOptionsUrl = config.DevAPIRequestsConfig.dataApi.urls.baseURL + config.DevAPIRequestsConfig.dataApi.urls.imageOptions;
         const imageOptionsHeaders = config.DevAPIRequestsConfig.dataApi.headers;
-
-        const fetchImageOptions = async () => {
-            try {
-                const response = await fetch(
-                    imageOptionsUrl,
-                    {
-                        method: "GET",
-                        headers: imageOptionsHeaders,
-                    }
-                );
-                if (!response.ok) {
-                    throw new Error("Network response error");
-                }
-                const data = await response.json();
-                setImageOptions(data.response);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-            }
-        };
-        fetchImageOptions();
+        fetchImageOptions(imageOptionsUrl, imageOptionsHeaders);
     }, []);
 
     return (
