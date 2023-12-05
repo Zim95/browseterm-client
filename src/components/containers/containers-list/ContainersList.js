@@ -2,8 +2,7 @@ import React, {useState} from 'react';
 import ContainerListButtons from './container-list-buttons/ContainerListButtons';
 import './ContainersList.css';
 
-function ContainersList({containerData, removeContainer}) {
-    console.log("containerData", containerData);
+function ContainersList({containerData, removeContainer, setContainerIps, unsetContainerIps}) {
     return (
         <div className="container-list">
             <table className="container-list-table">
@@ -25,7 +24,12 @@ function ContainersList({containerData, removeContainer}) {
                                     <td>{value.name}</td>
                                     <td>{value.image}</td>
                                     <td>{value.ips.join(",")}</td>
-                                    <ContainerListButtons removeContainer={removeContainer} containerValue={value}/>
+                                    <ContainerListButtons
+                                        removeContainer={removeContainer}
+                                        setContainerIps={setContainerIps}
+                                        unsetContainerIps={unsetContainerIps}
+                                        containerValue={value}
+                                    />
                                 </tr>
                             );
                         })

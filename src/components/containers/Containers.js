@@ -28,9 +28,29 @@ function Containers() {
 
   const removeContainer = (container) => {
     let updatedContainerData = { ...containerData };
-    if (containerData.hasOwnProperty(container.name)) {
+    if (updatedContainerData.hasOwnProperty(container.name)) {
       delete updatedContainerData[container.name];
     }
+    setContainerData(updatedContainerData);
+  };
+
+  const setContainerIps = (containers) => {
+    let updatedContainerData = { ...containerData };
+    containers.forEach((container) => {
+      if (updatedContainerData.hasOwnProperty(container.container_name)) {
+        updatedContainerData[container.container_name]['ips'].push(container.container_ip);
+      }
+    });
+    setContainerData(updatedContainerData);
+  };
+
+  const unsetContainerIps = (containers) => {
+    let updatedContainerData = { ...containerData };
+    containers.forEach((container) => {
+      if (updatedContainerData.hasOwnProperty(container.container_name)) {
+        updatedContainerData[container.container_name]['ips'] = [];
+      }
+    });
     setContainerData(updatedContainerData);
   };
 
@@ -39,7 +59,12 @@ function Containers() {
   return (
     <div>
       <ContainersForm addContainer={addContainer}/>
-      <ContainersList containerData={containerData} removeContainer={removeContainer}/>
+      <ContainersList
+        containerData={containerData}
+        removeContainer={removeContainer}
+        setContainerIps={setContainerIps}
+        unsetContainerIps={unsetContainerIps}
+      />
     </div>
   );
 }

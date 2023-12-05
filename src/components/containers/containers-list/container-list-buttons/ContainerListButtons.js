@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import "./ContainerListButtons.css";
 import config from '../../../../config';
 
-function ContainerListButtons({removeContainer, containerValue}) {
+function ContainerListButtons({removeContainer, setContainerIps, unsetContainerIps, containerValue}) {
     const [containerState, setContainerState] = useState("stopped");
 
     const baseURL = config.DevAPIRequestsConfig.containerAPI.urls.baseURL;
@@ -11,6 +11,7 @@ function ContainerListButtons({removeContainer, containerValue}) {
         {
             container_ids: containerValue.full_ids,
             container_network: containerValue.network,
+            container_name: containerValue.name
         }
     );
     const fetchJson = {
@@ -19,43 +20,52 @@ function ContainerListButtons({removeContainer, containerValue}) {
         body: body
     }
 
-    const makeRequest = async (offset, success) => {
+    const stopContainer = async () => {
+        console.log("Stopping Container...");
+        const offset = config.DevAPIRequestsConfig.containerAPI.urls.stopContainerOffset;
         const url = baseURL + offset;
         const response = await fetch(url, fetchJson);
         if (response.status == 200) {
-            success();
+            const json_response = await response.json();
+            unsetContainerIps(json_response.response);
+            setContainerState("stopped");
         } else {
             const error_message = await response.text();
             console.error(error_message);
         }
-    }
-
-    const stopContainer = async () => {
-        console.log("Stopping Container...");
-        const success = () => {
-            setContainerState("stopped");
-        };
-        const offset = config.DevAPIRequestsConfig.containerAPI.urls.stopContainerOffset;
-        makeRequest(offset, success);
     };
 
-    const startContainer = () => {
+    const startContainer = async () => {
         console.log("Starting Container...");
-        const success = () => {
-            setContainerState("started");
-        };
         const offset = config.DevAPIRequestsConfig.containerAPI.urls.startContainerOffset;
-        makeRequest(offset, success);
+        const url = baseURL + offset;
+        const response = await fetch(url, fetchJson);
+        if (response.status == 200) {
+            const json_response = await response.json();
+            setContainerIps(json_response.response);
+            setContainerState("started");
+        } else {
+            const error_message = await response.text();
+            console.error(error_message);
+        }
     };
 
-    const deleteContainer = () => {
+    const deleteContainer = async () => {
         console.log("Deleting Container...");
-        const success = () => {
-            removeContainer(containerValue);
-            setContainerState("deleted");
-        };
         const offset = config.DevAPIRequestsConfig.containerAPI.urls.deleteContainerOffset;
-        makeRequest(offset, success);
+        const url = baseURL + offset;
+        const response = await fetch(url, fetchJson);
+        if (response.status == 200) {
+            const json_response = await response.json();
+            removeContainer(containerValue);
+            if (containerState != "stopped") {
+                unsetContainerIps(json_response.response);
+            }
+            setContainerState("deleted");
+        } else {
+            const error_message = await response.text();
+            console.error(error_message);
+        }
     };
 
     const saveContainer = () => {
