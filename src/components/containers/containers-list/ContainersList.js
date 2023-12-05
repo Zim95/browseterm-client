@@ -3,7 +3,7 @@ import ContainerListButtons from './container-list-buttons/ContainerListButtons'
 import './ContainersList.css';
 
 function ContainersList({containerData, removeContainer}) {
-    
+    console.log("containerData", containerData);
     return (
         <div className="container-list">
             <table className="container-list-table">
@@ -18,14 +18,14 @@ function ContainersList({containerData, removeContainer}) {
                 </thead>
                 <tbody>
                     {
-                        containerData.map((container) => {
+                        Object.entries(containerData).map(([key, value]) => {
                             return (
-                                <tr>
-                                    <td>{container.id}</td>
-                                    <td>{container.name}</td>
-                                    <td>{container.image}</td>
-                                    <td>{container.ip}</td>
-                                    <ContainerListButtons removeContainer={removeContainer}/>
+                                <tr key={key}>
+                                    <td>{value.ids.join(",")}</td>
+                                    <td>{value.name}</td>
+                                    <td>{value.image}</td>
+                                    <td>{value.ips.join(",")}</td>
+                                    <ContainerListButtons removeContainer={removeContainer} containerValue={value}/>
                                 </tr>
                             );
                         })

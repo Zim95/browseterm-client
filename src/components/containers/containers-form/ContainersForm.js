@@ -43,14 +43,13 @@ function ContainersForm({addContainer}) {
             const postHeaders = config.DevAPIRequestsConfig.containerAPI.headers;
             const postUrl = config.DevAPIRequestsConfig.containerAPI.urls.baseURL + config.DevAPIRequestsConfig.containerAPI.urls.createContainerOffset;
             const response = await fetchCreateContainer(postUrl, postData, postHeaders);
-            console.log(response.response);
-            // addContainer(response);
+            addContainer(response.response);
         } catch (error) {
             console.error("Error create container", error);
-        }    
+        }
     };
 
-    const fetchCreateContainer = async(postContainerUrl, postContainerData, postContainerHeaders) => {
+    const fetchCreateContainer = async (postContainerUrl, postContainerData, postContainerHeaders) => {
         try {
             const response = await fetch(
                 postContainerUrl,
@@ -60,8 +59,9 @@ function ContainersForm({addContainer}) {
                     body: JSON.stringify(postContainerData),
                 }
             );
-            if (!response.ok) {
-                throw new Error(`HTTP Error! ${response.text}`);
+            if (response.status !== 200) {
+                const error_message = await response.text();
+                throw new Error(`HTTP Error! ${error_message }`);
             }
             const data = await response.json();
             return data;

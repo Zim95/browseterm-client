@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import "./ContainerListButtons.css";
 
-function ContainerListButtons({removeContainer}) {
+function ContainerListButtons({removeContainer, containerValue}) {
     const [containerState, setContainerState] = useState("stopped");
 
     const stopContainer = () => {
@@ -16,7 +16,7 @@ function ContainerListButtons({removeContainer}) {
 
     const deleteContainer = () => {
         console.log("Deleting Container...");
-        // removeContainer();
+        removeContainer(containerValue);
         setContainerState("deleted");
     };
 
