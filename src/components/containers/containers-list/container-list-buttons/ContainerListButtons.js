@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import "./ContainerListButtons.css";
 import config from '../../../../config';
 
@@ -20,57 +20,81 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
         body: body
     }
 
-    const stopContainer = async () => {
-        console.log("Stopping Container...");
-        const offset = config.DevAPIRequestsConfig.containerAPI.urls.stopContainerOffset;
+    const printContainerState = () => {
+        const currentState = containerState;
+        console.log("Container State", currentState);
+    };
+
+    const makeRequest = async (offset, successCallback) => {
         const url = baseURL + offset;
         const response = await fetch(url, fetchJson);
         if (response.status == 200) {
             const json_response = await response.json();
-            unsetContainerIps(json_response.response);
-            setContainerState("stopped");
+            successCallback(json_response);
         } else {
             const error_message = await response.text();
             console.error(error_message);
         }
+    };
+
+    const stopContainer = async () => {
+        console.log("Stopping Container...");
+        const successCallback = (response) => {
+            unsetContainerIps(response.response);
+            setContainerState("stopped");
+        };
+        const offset = config.DevAPIRequestsConfig.containerAPI.urls.stopContainerOffset;
+        await makeRequest(offset, successCallback);
     };
 
     const startContainer = async () => {
         console.log("Starting Container...");
-        const offset = config.DevAPIRequestsConfig.containerAPI.urls.startContainerOffset;
-        const url = baseURL + offset;
-        const response = await fetch(url, fetchJson);
-        if (response.status == 200) {
-            const json_response = await response.json();
-            setContainerIps(json_response.response);
+        const successCallback = (response) => {
+            setContainerIps(response.response);
             setContainerState("started");
-        } else {
-            const error_message = await response.text();
-            console.error(error_message);
-        }
+        };
+        const offset = config.DevAPIRequestsConfig.containerAPI.urls.startContainerOffset;
+        await makeRequest(offset, successCallback);
     };
 
     const deleteContainer = async () => {
         console.log("Deleting Container...");
-        const offset = config.DevAPIRequestsConfig.containerAPI.urls.deleteContainerOffset;
-        const url = baseURL + offset;
-        const response = await fetch(url, fetchJson);
-        if (response.status == 200) {
-            const json_response = await response.json();
+        const successCallback = (response) => {
             removeContainer(containerValue);
             if (containerState != "stopped") {
-                unsetContainerIps(json_response.response);
+                // This part will never occur because, delete will only happen when container is stopped.
+                // Therefore, there will never be a delete if containerState != 'stopped'
+                unsetContainerIps(response.response);
             }
             setContainerState("deleted");
-        } else {
-            const error_message = await response.text();
-            console.error(error_message);
-        }
+        };
+        const offset = config.DevAPIRequestsConfig.containerAPI.urls.deleteContainerOffset;
+        await makeRequest(offset, successCallback);
     };
 
     const saveContainer = () => {
         console.log("Saving Container");
     };
+
+    const unloadContainer = async () => {
+        printContainerState();
+        if (containerState != "stopped") {
+            stopContainer().then(() => deleteContainer());
+        } else {
+            await deleteContainer();
+        }
+    };
+
+    // useEffect(() => {
+    //     printContainerState();
+    // }, [containerState]);
+
+    useEffect(() => {
+        window.addEventListener('beforeunload', unloadContainer);
+        return () => {
+            window.removeEventListener('beforeunload', unloadContainer);
+        };
+    }, [containerState]);
 
     return (
         <td className="button-container">
@@ -96,6 +120,7 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
             </button>
             <button
                 className="button-container-button button-container-delete"
+                disabled={(containerState == "stopped" ? false: true)}
                 onClick={deleteContainer}
             >
                 <i className="fas fa-trash"></i>
