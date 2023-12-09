@@ -40,8 +40,8 @@ function ContainersForm({addContainer}) {
                     "SSH_PASSWORD": formData["container-password"],
                 }
             }
-            const postHeaders = config.DevAPIRequestsConfig.containerAPI.headers;
-            const postUrl = config.DevAPIRequestsConfig.containerAPI.urls.baseURL + config.DevAPIRequestsConfig.containerAPI.urls.createContainerOffset;
+            const postHeaders = config.containerAPI.headers;
+            const postUrl = config.containerAPI.urls.baseURL + config.containerAPI.urls.createContainerOffset;
             const response = await fetchCreateContainer(postUrl, postData, postHeaders);
             addContainer(response.response);
         } catch (error) {
@@ -90,8 +90,8 @@ function ContainersForm({addContainer}) {
     };
 
     useEffect(() => {
-        const imageOptionsUrl = config.DevAPIRequestsConfig.dataApi.urls.baseURL + config.DevAPIRequestsConfig.dataApi.urls.imageOptions;
-        const imageOptionsHeaders = config.DevAPIRequestsConfig.dataApi.headers;
+        const imageOptionsUrl = config.dataApi.urls.baseURL + config.dataApi.urls.imageOptions;
+        const imageOptionsHeaders = config.dataApi.headers;
         fetchImageOptions(imageOptionsUrl, imageOptionsHeaders);
     }, []);
 

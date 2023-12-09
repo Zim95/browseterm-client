@@ -1,12 +1,9 @@
 1. Add error modal to display error.
-2. Change the response of StartContainer to include container name as well.
-    Add setContainerIps and unsetContainerIps. - Done
+2. Change the response of StartContainer to include container name as well. Add setContainerIps and unsetContainerIps. - (Done. DONE)
 3. Add spinner
-4. Load configs conditionally.
-
-Needed:
-------
-1. Test for multiple containers.
-2. For kubernetes stop is not an option, so give an illusion that k8s has stopped the pod.
-3. beforeunload, not stopping container, stop the container.
-4. Add an SSHSocket container in the same network for a user, if it does not exist.
+4. Load configs conditionally. - (Done for development. DONE)
+5. Premium users should not delete the containers upon unloading or atleast something similar.
+6. Test for multiple containers. - (Done. DONE)
+7. For kubernetes stop is not an option, so give an illusion that k8s has stopped the pod. - (Done. DONE)
+8. beforeunload, not stopping container, stop the container. - (Done, added beacon endpoint. DONE)
+9. Add an SSHSocket container in the same network for a user, if it does not exist.

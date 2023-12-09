@@ -5,8 +5,8 @@ import config from '../../../../config';
 function ContainerListButtons({removeContainer, setContainerIps, unsetContainerIps, containerValue}) {
     const [containerState, setContainerState] = useState("stopped");
 
-    const baseURL = config.DevAPIRequestsConfig.containerAPI.urls.baseURL;
-    const headers = config.DevAPIRequestsConfig.containerAPI.headers;
+    const baseURL = config.containerAPI.urls.baseURL;
+    const headers = config.containerAPI.headers;
     const body = JSON.stringify(
         {
             container_ids: containerValue.full_ids,
@@ -43,7 +43,7 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
             unsetContainerIps(response.response);
             setContainerState("stopped");
         };
-        const offset = config.DevAPIRequestsConfig.containerAPI.urls.stopContainerOffset;
+        const offset = config.containerAPI.urls.stopContainerOffset;
         await makeRequest(offset, successCallback);
     };
 
@@ -53,7 +53,7 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
             setContainerIps(response.response);
             setContainerState("started");
         };
-        const offset = config.DevAPIRequestsConfig.containerAPI.urls.startContainerOffset;
+        const offset = config.containerAPI.urls.startContainerOffset;
         await makeRequest(offset, successCallback);
     };
 
@@ -68,7 +68,7 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
             }
             setContainerState("deleted");
         };
-        const offset = config.DevAPIRequestsConfig.containerAPI.urls.deleteContainerOffset;
+        const offset = config.containerAPI.urls.deleteContainerOffset;
         await makeRequest(offset, successCallback);
     };
 
@@ -79,7 +79,7 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
     const unloadContainer = async () => {
         let beaconBody = [];
         if (containerState != "stopped") {
-            const stopOffset = config.DevAPIRequestsConfig.containerAPI.urls.stopContainerOffset;
+            const stopOffset = config.containerAPI.urls.stopContainerOffset;
             const stopUrl = baseURL + stopOffset;
             const stopBeaconBody = {
                 "method": "POST",
@@ -89,7 +89,7 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
             }
             beaconBody.push(stopBeaconBody);   
         };
-        const deleteOffset = config.DevAPIRequestsConfig.containerAPI.urls.deleteContainerOffset;
+        const deleteOffset = config.containerAPI.urls.deleteContainerOffset;
         const deleteUrl = baseURL + deleteOffset;
         const deleteBeaconBody = {
             "method": "POST",
@@ -99,7 +99,7 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
         };
         beaconBody.push(deleteBeaconBody);
 
-        const beaconOffset = config.DevAPIRequestsConfig.containerAPI.urls.beaconOffset;
+        const beaconOffset = config.containerAPI.urls.beaconOffset;
         const beaconUrl = baseURL + beaconOffset;
         beaconBody = JSON.stringify(beaconBody);
         navigator.sendBeacon(beaconUrl, new Blob([beaconBody]));
