@@ -77,17 +77,33 @@ function ContainerListButtons({removeContainer, setContainerIps, unsetContainerI
     };
 
     const unloadContainer = async () => {
-        printContainerState();
+        let beaconBody = [];
         if (containerState != "stopped") {
-            stopContainer().then(() => deleteContainer());
-        } else {
-            await deleteContainer();
-        }
-    };
+            const stopOffset = config.DevAPIRequestsConfig.containerAPI.urls.stopContainerOffset;
+            const stopUrl = baseURL + stopOffset;
+            const stopBeaconBody = {
+                "method": "POST",
+                "url": stopUrl,
+                "headers": headers,
+                "body": body,
+            }
+            beaconBody.push(stopBeaconBody);   
+        };
+        const deleteOffset = config.DevAPIRequestsConfig.containerAPI.urls.deleteContainerOffset;
+        const deleteUrl = baseURL + deleteOffset;
+        const deleteBeaconBody = {
+            "method": "POST",
+            "url": deleteUrl,
+            "headers": headers,
+            "body": body,
+        };
+        beaconBody.push(deleteBeaconBody);
 
-    // useEffect(() => {
-    //     printContainerState();
-    // }, [containerState]);
+        const beaconOffset = config.DevAPIRequestsConfig.containerAPI.urls.beaconOffset;
+        const beaconUrl = baseURL + beaconOffset;
+        beaconBody = JSON.stringify(beaconBody);
+        navigator.sendBeacon(beaconUrl, new Blob([beaconBody]));
+    };
 
     useEffect(() => {
         window.addEventListener('beforeunload', unloadContainer);
