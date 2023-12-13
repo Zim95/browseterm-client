@@ -5,6 +5,7 @@ import "./Containers.css";
 
 function Containers() {
   const [containerData, setContainerData] = useState({});
+  const [sshSocketCount, setSshSocketCount] = useState(0);
 
   const addContainer = (containerResponse) => {
     let containerDataMap = {};
@@ -54,8 +55,6 @@ function Containers() {
     setContainerData(updatedContainerData);
   };
 
-  // if the user is premium, then we will populate containerData from the database.
-  // useEffect(); 
   return (
     <div>
       <ContainersForm addContainer={addContainer}/>

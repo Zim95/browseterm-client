@@ -10,7 +10,7 @@ const Profile = React.lazy(() => import('./components/profile/Profile'));
 const Containers = React.lazy(() => import('./components/containers/Containers'));
 const Subscribe = React.lazy(() => import('./components/subscribe/Subscribe'));
 const SignIn = React.lazy(() => import('./components/signin/SignIn'));
-const Terminal = React.lazy(() => import('./components/terminal/Terminal'));
+const Terminal = React.lazy(() => import('./components/terminal/ContainerTerminal'));
 
 function App() {
     const [isNavbarRetracted, setIsNavbarRetracted] = useState(false);

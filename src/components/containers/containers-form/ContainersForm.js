@@ -33,9 +33,6 @@ function ContainersForm({addContainer}) {
                 "image_name": formData["image-name"],
                 "container_name": containerName,
                 "container_network": containerNetwork,
-                "publish_information": {
-                    "22/tcp": 2222
-                },
                 "environment": {
                     "SSH_PASSWORD": formData["container-password"],
                 }
