@@ -2,7 +2,15 @@ import React, {useEffect, useState} from 'react';
 import "./ContainerListButtons.css";
 import config from '../../../../config';
 
-function ContainerListButtons({removeContainer, setContainerIps, unsetContainerIps, containerValue}) {
+function ContainerListButtons(
+    {
+        socketSSHContainer,
+        removeContainer,
+        setContainerIps,
+        unsetContainerIps,
+        containerValue
+    }
+) {
     const [containerState, setContainerState] = useState("stopped");
 
     const baseURL = config.containerAPI.urls.baseURL;

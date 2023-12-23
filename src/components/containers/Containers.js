@@ -9,6 +9,10 @@ function Containers() {
   const [containerData, setContainerData] = useState({});
   const [socketSSHContainer, setSocketSSHContainer] = useState(null);
 
+  const getRandomNumberString = () => {
+    return Math.floor(Math.random() * 10000).toString();
+  };
+
   const startSocketSSH = async (container) => {
     try {
       const startHeaders = config.containerAPI.headers;
@@ -44,7 +48,7 @@ function Containers() {
   const createSocketSSH = async () => {
     try {
         const userName = "zim95";
-        const containerName = userName + "_socket_ssh_container";
+        const containerName = userName + "_socket_ssh_container" + getRandomNumberString();
         const containerNetwork = userName + "_network";
         const postData = JSON.stringify({
             "image_name": "zim95/socket-ssh:latest",
@@ -178,6 +182,7 @@ function Containers() {
       <ContainersForm addContainer={addContainer}/>
       <ContainersList
         containerData={containerData}
+        socketSSHContainer={socketSSHContainer}
         removeContainer={removeContainer}
         setContainerIps={setContainerIps}
         unsetContainerIps={unsetContainerIps}
