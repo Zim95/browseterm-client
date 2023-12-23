@@ -33,13 +33,17 @@ function Containers() {
           }
       );
       if (response.status !== 200) {
-        const error_message = await response.text();
-        throw new Error(`HTTP Error! ${error_message }`);
+        // const error_message = await response.text();
+        // throw new Error(`HTTP Error! ${error_message }`);
+        await startSocketSSH(container);
+      } else {
+        const data = await response.json();
+        const ssContainer = {
+          ...data.response[0],
+          ...{"container_network": container.container_network}
+        };
+        setSocketSSHContainer(ssContainer);
       }
-      const data = await response.json();
-      const ssContainer = {...data.response[0], ...{"container_network": container.container_network}};
-      console.log("SSH Container", ssContainer);
-      setSocketSSHContainer(ssContainer);
     } catch (error) {
       console.error("Error while starting container", error);
     }
