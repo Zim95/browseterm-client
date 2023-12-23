@@ -2,7 +2,8 @@ import React, {useEffect, useState} from 'react';
 import ContainersForm from './containers-form/ContainersForm';
 import ContainersList from './containers-list/ContainersList';
 import "./Containers.css";
-import { config } from '@fortawesome/fontawesome-svg-core';
+import config from '../../config';
+
 
 function Containers() {
   const [containerData, setContainerData] = useState({});
@@ -11,7 +12,7 @@ function Containers() {
   const startSocketSSH = async (container) => {
     try {
       const startHeaders = config.containerAPI.headers;
-      const startUrl = config.containerAPI.urs.baseURL + config.containerAPI.urls.startContainerOffset;
+      const startUrl = config.containerAPI.urls.baseURL + config.containerAPI.urls.startContainerOffset;
       const startData = JSON.stringify(
         {
             "container_ids": [container.container_id],
@@ -32,9 +33,11 @@ function Containers() {
         throw new Error(`HTTP Error! ${error_message }`);
       }
       const data = await response.json();
-      setSocketSSHContainer(data.response[0]);
+      const ssContainer = {...data.response[0], ...{"container_network": container.container_network}};
+      console.log("SSH Container", ssContainer);
+      setSocketSSHContainer(ssContainer);
     } catch (error) {
-      throw new Error("Error while starting container", error);
+      console.error("Error while starting container", error);
     }
   };
 
@@ -68,28 +71,57 @@ function Containers() {
         const data = await response.json();
         await startSocketSSH(data.response[0]);
     } catch (error) {
-        throw new Error("Error create socket ssh", error);
+        console.error("Error create socket ssh", error);
     }
   };
 
-  const removeSocketSSH = async () => {
-    try {
-      console.log("Removing", socketSSHContainer);
-    } catch(error) {
-      throw new Error(error)
+  const unloadContainer = async () => {
+    const unloadContainerBody = JSON.stringify(
+      {
+          container_ids: [socketSSHContainer.container_id],
+          container_network: socketSSHContainer.container_network,
+          container_name: socketSSHContainer.container_name,
+      }
+    );
+    const unloadContainerHeaders = config.containerAPI.headers;
+    const stopOffset = config.containerAPI.urls.stopContainerOffset;
+    const stopUrl = config.containerAPI.urls.baseURL + stopOffset;
+    const stopBeaconBody = {
+        "method": "POST",
+        "url": stopUrl,
+        "headers": unloadContainerHeaders,
+        "body": unloadContainerBody,
     }
+    const deleteOffset = config.containerAPI.urls.deleteContainerOffset;
+    const deleteUrl = config.containerAPI.urls.baseURL + deleteOffset;
+    const deleteBeaconBody = {
+        "method": "POST",
+        "url": deleteUrl,
+        "headers": unloadContainerHeaders,
+        "body": unloadContainerBody,
+    };
+    const beaconBody = JSON.stringify([stopBeaconBody, deleteBeaconBody]);
+    const beaconOffset = config.containerAPI.urls.beaconOffset;
+    const beaconUrl = config.containerAPI.urls.baseURL + beaconOffset;
+    navigator.sendBeacon(beaconUrl, new Blob([beaconBody]));
   };
 
-  useEffect(async () => {
-    try {
-      await createSocketSSH();
-      window.addEventListener('beforeunload', unloadContainer);
-      return () => {
-          window.removeEventListener('beforeunload', unloadContainer);
-      };
-    } catch (error) {
-      console.error(error);
-    }
+  useEffect(() => {
+    const initializeCreateContainer = async() => {
+      try {
+        await createSocketSSH();
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    initializeCreateContainer();
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('unload', unloadContainer);
+    return () => {
+        window.removeEventListener('unload', unloadContainer);
+    };
   }, [socketSSHContainer]);
 
 
