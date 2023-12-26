@@ -40,7 +40,10 @@ function Containers() {
         const data = await response.json();
         const ssContainer = {
           ...data.response[0],
-          ...{"container_network": container.container_network}
+          ...{
+            "container_network": container.container_network,
+            "container_port": 8000,
+          }
         };
         setSocketSSHContainer(ssContainer);
       }

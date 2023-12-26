@@ -33,6 +33,21 @@ function ContainerListButtons(
         console.log("Container State", currentState);
     };
 
+    const saveData = (data) => {
+        const hash = Math.floor(Math.random() * 10000).toString();
+        localStorage.setItem(hash, JSON.stringify(data));
+        return hash;
+    };
+
+    const redirectWithData = () => {
+        const data = {
+            "socketSSHContainer": socketSSHContainer,
+            "containerValue": containerValue
+        }
+        const hash = saveData(data);
+        window.location.pathname = "/terminal/" + hash;
+    };
+
     const makeRequest = async (offset, successCallback) => {
         const url = baseURL + offset;
         const response = await fetch(url, fetchJson);
@@ -125,6 +140,7 @@ function ContainerListButtons(
             <button
                 className="button-container-button button-container-visit"
                 disabled={(containerState == "started" ? false: true)}
+                onClick={redirectWithData}
             >
                 <i className="fas fa-share"></i>
             </button>
