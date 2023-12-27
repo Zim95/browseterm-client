@@ -24,10 +24,12 @@ function ContainerTerminal() {
       var dataToSend = {
           event: 'ssh_connect',  // Event name or identifier
           ssh_hash: termhash,
-          ssh_host: terminalData.containerValue.ips[0],
+          ssh_host: terminalData.containerValue.ips[0], // Any one of the ips will work.
           ssh_port: 22,
-          ssh_username: 'ubuntu',
-          ssh_password: '1234'
+          ssh_username: terminalData.socketSSHUserMapping[
+            terminalData.containerValue.name].username,
+          ssh_password: terminalData.socketSSHUserMapping[
+            terminalData.containerValue.name].password,
       };
 
       // Convert data to a JSON string (if it's not already a string)
@@ -42,7 +44,7 @@ function ContainerTerminal() {
         const msg = JSON.stringify(
             {
                 event: "data",
-                ssh_hash: "asdf",
+                ssh_hash: termhash,
                 message: data
             }
         )

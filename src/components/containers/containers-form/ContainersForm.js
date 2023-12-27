@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import "./ContainersForm.css";
 import config from '../../../config';
 
-function ContainersForm({addContainer}) {
+function ContainersForm({addContainer, addSocketSSHUserMapping}) {
     const [formData, setFormData] = useState(
         {
             "image-name": "",
@@ -12,6 +12,7 @@ function ContainersForm({addContainer}) {
     );
 
     const [imageOptions, setImageOptions] = useState([]);
+    const [imageNameLabelMapping, setImageNameLabelMapping] = useState({});
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
@@ -41,6 +42,11 @@ function ContainersForm({addContainer}) {
             const postUrl = config.containerAPI.urls.baseURL + config.containerAPI.urls.createContainerOffset;
             const response = await fetchCreateContainer(postUrl, postData, postHeaders);
             addContainer(response.response);
+            addSocketSSHUserMapping(
+                containerName,
+                imageNameLabelMapping[formData["image-name"]],
+                formData["container-password"],
+            );
         } catch (error) {
             console.error("Error create container", error);
         }
@@ -80,7 +86,13 @@ function ContainersForm({addContainer}) {
                 throw new Error("Network response error");
             }
             const data = await response.json();
-            setImageOptions(data.response);
+            const imageLabels = data.response;
+            setImageOptions(imageLabels);
+            let imageLabelMapping = {};
+            for(let i=0; i<imageLabels.length; i++) {
+                imageLabelMapping[imageLabels[i].value] = imageLabels[i].label;
+            }
+            setImageNameLabelMapping(imageLabelMapping);
         } catch (error) {
             console.error("Error fetching data:", error);
         }

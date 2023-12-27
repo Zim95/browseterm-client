@@ -5,10 +5,12 @@ import config from '../../../../config';
 function ContainerListButtons(
     {
         socketSSHContainer,
+        socketSSHUserMapping,
         removeContainer,
         setContainerIps,
         unsetContainerIps,
-        containerValue
+        containerValue,
+        removeSocketSSHUserMapping,
     }
 ) {
     const [containerState, setContainerState] = useState("stopped");
@@ -42,10 +44,12 @@ function ContainerListButtons(
     const redirectWithData = () => {
         const data = {
             "socketSSHContainer": socketSSHContainer,
+            "socketSSHUserMapping": socketSSHUserMapping,
             "containerValue": containerValue
         }
         const hash = saveData(data);
-        window.location.pathname = "/terminal/" + hash;
+        const path = window.location.origin + "/terminal/" + hash;
+        window.open(path, "_blank");
     };
 
     const makeRequest = async (offset, successCallback) => {
@@ -84,6 +88,7 @@ function ContainerListButtons(
         console.log("Deleting Container...");
         const successCallback = (response) => {
             removeContainer(containerValue);
+            removeSocketSSHUserMapping(containerValue);
             if (containerState != "stopped") {
                 // This part will never occur because, delete will only happen when container is stopped.
                 // Therefore, there will never be a delete if containerState != 'stopped'

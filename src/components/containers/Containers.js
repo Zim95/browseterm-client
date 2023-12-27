@@ -8,6 +8,7 @@ import config from '../../config';
 function Containers() {
   const [containerData, setContainerData] = useState({});
   const [socketSSHContainer, setSocketSSHContainer] = useState(null);
+  const [socketSSHUserMapping, setSocketSSHUserMapping] = useState({});
 
   const getRandomNumberString = () => {
     return Math.floor(Math.random() * 10000).toString();
@@ -156,6 +157,7 @@ function Containers() {
     setContainerData({...containerData, ...containerDataMap});
   };
 
+
   const removeContainer = (container) => {
     let updatedContainerData = { ...containerData };
     if (updatedContainerData.hasOwnProperty(container.name)) {
@@ -184,15 +186,41 @@ function Containers() {
     setContainerData(updatedContainerData);
   };
 
+  const addSocketSSHUserMapping = (
+    containerName,
+    containerUsername,
+    containerPassword
+  ) => {
+    setSocketSSHUserMapping(
+      {
+        ...socketSSHUserMapping,
+        ...{[containerName]: {"username": containerUsername, "password": containerPassword}}
+      }
+    );
+  };
+
+  const removeSocketSSHUserMapping = (container) => {
+    let updatedSocketSSHUserMapping = {...socketSSHUserMapping};
+    if(updatedSocketSSHUserMapping.hasOwnProperty(container.name)) {
+      delete updatedSocketSSHUserMapping[container.name];
+    }
+    setSocketSSHUserMapping(updatedSocketSSHUserMapping);
+  };
+
   return (
     <div>
-      <ContainersForm addContainer={addContainer}/>
+      <ContainersForm
+        addContainer={addContainer}
+        addSocketSSHUserMapping={addSocketSSHUserMapping}
+      />
       <ContainersList
         containerData={containerData}
         socketSSHContainer={socketSSHContainer}
+        socketSSHUserMapping={socketSSHUserMapping}
         removeContainer={removeContainer}
         setContainerIps={setContainerIps}
         unsetContainerIps={unsetContainerIps}
+        removeSocketSSHUserMapping={removeSocketSSHUserMapping}
       />
     </div>
   );
