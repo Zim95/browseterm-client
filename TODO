@@ -7,3 +7,8 @@
 7. For kubernetes stop is not an option, so give an illusion that k8s has stopped the pod. - (Done. DONE)
 8. beforeunload, not stopping container, stop the container. - (Done, added beacon endpoint. DONE)
 9. Add an SSHSocket container in the same network for a user, if it does not exist.
+
+
+TO Fix:
+1. Scale the websockets.
+2. Get the stream to work properly.
