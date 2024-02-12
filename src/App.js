@@ -36,7 +36,7 @@ function App() {
 
     return (
         <Router>
-            <div className={isNavbarRetracted? "wrapper retracted": "wrapper"}>
+            <div className={`wrapper ${isNavbarRequired() ? (isNavbarRetracted ? 'retracted' : '') : 'retracted'}`}>
                 {isNavbarRequired() && <Navbar onToggleRetraction={toggleNavbarRetraction}/>}
                 <div className="app-content">
                     <Suspense fallback={<div>Loading....</div>}>
