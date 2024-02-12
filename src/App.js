@@ -21,17 +21,11 @@ function App() {
 
     const isNavbarRequired = () => {
         const notNeededRoutes = [
-            "/terminal",
-            "/signin",
+            "/terminal"
         ];
 
         const path = window.location.href;
-        for(let notNeededRoute of notNeededRoutes) {
-            if (path.includes(notNeededRoute)) {
-                return false;
-            }
-        }
-        return true;
+        return !notNeededRoutes.some(route => path.includes(route));
     };
 
     return (
