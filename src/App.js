@@ -19,10 +19,25 @@ function App() {
         setIsNavbarRetracted(!isNavbarRetracted);
     };
 
+    const isNavbarRequired = () => {
+        const notNeededRoutes = [
+            "/terminal",
+            "/signin",
+        ];
+
+        const path = window.location.href;
+        for(let notNeededRoute of notNeededRoutes) {
+            if (path.includes(notNeededRoute)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
     return (
         <Router>
             <div className={isNavbarRetracted? "wrapper retracted": "wrapper"}>
-                <Navbar onToggleRetraction={toggleNavbarRetraction}/>
+                {isNavbarRequired() && <Navbar onToggleRetraction={toggleNavbarRetraction}/>}
                 <div className="app-content">
                     <Suspense fallback={<div>Loading....</div>}>
                         <Routes>

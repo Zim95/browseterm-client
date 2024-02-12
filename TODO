@@ -1,3 +1,8 @@
+# Super important
+1. Avoid creating multiple socket-ssh connections upon tab switch.
+2. Test if it even works or not with Kubernetes.
+
+# Important
 1. Add error modal to display error.
 2. Change the response of StartContainer to include container name as well. Add setContainerIps and unsetContainerIps. - (Done. DONE)
 3. Add spinner
@@ -11,5 +16,5 @@
 
 TO Fix:
 1. Scale the websockets.
-2. Get the stream to work properly.
+2. Get the stream to work properly. - Migrated Code to node.
 3. Clean code.

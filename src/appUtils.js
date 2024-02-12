@@ -51,12 +51,17 @@ export class RequestMaker {
     parseResponse = async(response) => {
         /*
             Parses the successful response and returns data.
+
+            Author: Namah Shrestha
         */
         const data = await response.json();
         return data.response;
     };
 
     callOnce = async() => {
+        /*
+            CallOnce
+        */
         const response = this.makeRequest();
         if (response.status !== 200) {
             const error = await response.text();

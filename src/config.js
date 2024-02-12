@@ -22,6 +22,16 @@ const configuration = {
                 "Content-Type": "application/json"
             }
         },
+        "authAPI": {
+            "authServerBaseURL": "http://localhost:9001/",
+            "authEndpointOffset": "authorize",
+            "tokenEndpointOffset": "token",
+        },
+        "clientInformation": {
+            "clientId": "oauth-client-1",
+            "clientSecret": "oauth-client-secret-1",
+            "redirectURIs": ["http://localhost:8001/"],
+        },
     },
     "production": {
         "containerAPI": {
@@ -45,6 +55,11 @@ const configuration = {
             "headers": {
                 "Content-Type": "application/json"
             }
+        },
+        "authAPI": {
+            "authServerBaseURL": "http://localhost:9001/",
+            "authEndpointOffset": "authorize",
+            "tokenEndpointOffset": "token",
         },
     }
 }
