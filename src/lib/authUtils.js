@@ -5,12 +5,12 @@
 */
 
 // Module imports
-import config from "./config";
+import config from "../config";
 import { RequestMaker } from "./appUtils";
 
 
 export class Authorizer {
-    constructor() {
+    constructor(config) {
         this.authServerBaseURL = config.authAPI.authServerBaseURL;
         this.authEndpoint = this.authServerBaseURL + config.authAPI.authEndpointOffset;
         this.tokenEndpoint = this.authServerBaseURL + config.authAPI.tokenEndpointOffset;
@@ -19,6 +19,15 @@ export class Authorizer {
         this.redirectURIs = config.clientInformation.redirectURIs;
         this.accessToken = localStorage.getItem("accessToken") || null;
     }
+
+    getUser = () => {
+        /*
+            Get the user info logic goes in here.
+        */
+       return {
+        "userName": "Zim95"
+       }; 
+    };
 
     isTokenValid = () => {
         /* Checks if the access token exists and is still valid*/

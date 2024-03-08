@@ -3,12 +3,23 @@ import ContainersForm from './containers-form/ContainersForm';
 import ContainersList from './containers-list/ContainersList';
 import "./Containers.css";
 import config from '../../config';
+import { ContainerManager } from '../../lib/containerUtils';
 
+/*
+  Add the containerManager here and pass it around to all components.
+
+*/
 
 function Containers() {
+  // Container Manager object
+  const containerManager = new ContainerManager(config);
+
+  // State
   const [containerData, setContainerData] = useState({});
   const [socketSSHContainer, setSocketSSHContainer] = useState(null);
   const [socketSSHUserMapping, setSocketSSHUserMapping] = useState({});
+
+
 
   const getRandomNumberString = () => {
     return Math.floor(Math.random() * 10000).toString();
@@ -136,28 +147,6 @@ function Containers() {
     };
   }, [socketSSHContainer]);
 
-
-  const addContainer = (containerResponse) => {
-    let containerDataMap = {};
-    containerResponse.map((container) => {
-        if(containerDataMap.hasOwnProperty(container.container_name)) {
-          containerDataMap[container.container_name]['ids'].push(container.container_id.slice(0, 4));
-          containerDataMap[container.container_name]['full_ids'].push(container.container_id);
-        } else {
-          containerDataMap[container.container_name] = {
-              'name': container.container_name,
-              'image': container.container_image,
-              'ips': [],
-              'ids': [container.container_id.slice(0, 4)],
-              'full_ids': [container.container_id],
-              'network': container.container_network
-          }
-        }
-    });
-    setContainerData({...containerData, ...containerDataMap});
-  };
-
-
   const removeContainer = (container) => {
     let updatedContainerData = { ...containerData };
     if (updatedContainerData.hasOwnProperty(container.name)) {
@@ -186,19 +175,6 @@ function Containers() {
     setContainerData(updatedContainerData);
   };
 
-  const addSocketSSHUserMapping = (
-    containerName,
-    containerUsername,
-    containerPassword
-  ) => {
-    setSocketSSHUserMapping(
-      {
-        ...socketSSHUserMapping,
-        ...{[containerName]: {"username": containerUsername, "password": containerPassword}}
-      }
-    );
-  };
-
   const removeSocketSSHUserMapping = (container) => {
     let updatedSocketSSHUserMapping = {...socketSSHUserMapping};
     if(updatedSocketSSHUserMapping.hasOwnProperty(container.name)) {
@@ -210,8 +186,9 @@ function Containers() {
   return (
     <div>
       <ContainersForm
-        addContainer={addContainer}
-        addSocketSSHUserMapping={addSocketSSHUserMapping}
+        containerManager={containerManager}
+        setContainerData={setContainerData}
+        setSocketSSHUserMapping={setSocketSSHUserMapping}
       />
       <ContainersList
         containerData={containerData}

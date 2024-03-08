@@ -20,6 +20,7 @@ export class RequestMaker {
                 url: String: URL to make the request to.
                 body: JSON | null: Body of the request.
                 headers: JSON | null: Headers of the request.
+            :returns: null
 
             Author: Namah Shrestha
         */
@@ -31,7 +32,8 @@ export class RequestMaker {
 
     makeRequest = async() => {
         /*
-            This is the make request method which makes the request based on parameters.
+            This is the make request method which makes the request
+            based on parameters.
 
             Author: Namah Shrestha
         */
@@ -48,7 +50,7 @@ export class RequestMaker {
         return response;
     };
 
-    parseResponse = async(response) => {
+    parseJSONResponse = async(response) => {
         /*
             Parses the successful response and returns data.
 
@@ -62,22 +64,22 @@ export class RequestMaker {
         /*
             CallOnce
         */
-        const response = this.makeRequest();
+        const response = await this.makeRequest();
         if (response.status !== 200) {
             const error = await response.text();
             throw new Error("Make Request Error", error);
         }
-        const data = await this.parseResponse(response);
+        const data = await this.parseJSONResponse(response);
         return data;
     };
 
-    callUntilSuccess = async() => {
-        const response = this.makeRequest();
-        if (response.status !== 200) {
-            this.callUntilSuccess();
-        } else {
-            const data = await this.parseResponse(response);
-            return data;
-        } 
+    callUntilSuccess = async (maxAttempts = 15) => {
+        for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+            const response = await this.makeRequest();
+            if (response.status === 200) {
+                return await this.parseJSONResponse(response);
+            }
+        }
+        throw new Error("Maximum number of attempts reached without success.");
     };
 }

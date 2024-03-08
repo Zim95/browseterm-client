@@ -1,8 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import "./ContainersForm.css";
 import config from '../../../config';
+import {
+    createContainerBasedOnFormData,
+} from "../../../lib/containerUtils";
 
-function ContainersForm({addContainer, addSocketSSHUserMapping}) {
+function ContainersForm(
+    {
+        containerManager,
+        setContainerData,
+        setSocketSSHUserMapping
+    }
+) {
     const [formData, setFormData] = useState(
         {
             "image-name": "",
@@ -27,49 +36,11 @@ function ContainersForm({addContainer, addSocketSSHUserMapping}) {
     const createContainer = async (event) => {
         try {
             event.preventDefault();
-            const userName = "zim95";
-            const containerName = userName + "_" + formData["container-name"];
-            const containerNetwork = userName + "_network";
-            const postData = {
-                "image_name": formData["image-name"],
-                "container_name": containerName,
-                "container_network": containerNetwork,
-                "environment": {
-                    "SSH_PASSWORD": formData["container-password"],
-                }
-            }
-            const postHeaders = config.containerAPI.headers;
-            const postUrl = config.containerAPI.urls.baseURL + config.containerAPI.urls.createContainerOffset;
-            const response = await fetchCreateContainer(postUrl, postData, postHeaders);
-            addContainer(response.response);
-            addSocketSSHUserMapping(
-                containerName,
-                imageNameLabelMapping[formData["image-name"]],
-                formData["container-password"],
-            );
+            await createContainerBasedOnFormData.call(containerManager, formData);
+            setContainerData(containerManager.containerDataMap);
+            setSocketSSHUserMapping(containerManager.socketSSHUserMapping);
         } catch (error) {
-            console.error("Error create container", error);
-        }
-    };
-
-    const fetchCreateContainer = async (postContainerUrl, postContainerData, postContainerHeaders) => {
-        try {
-            const response = await fetch(
-                postContainerUrl,
-                {
-                    method: "POST",
-                    headers: postContainerHeaders,
-                    body: JSON.stringify(postContainerData),
-                }
-            );
-            if (response.status !== 200) {
-                const error_message = await response.text();
-                throw new Error(`HTTP Error! ${error_message }`);
-            }
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            throw new Error(error);
+            console.log(error);
         }
     };
 

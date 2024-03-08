@@ -9,14 +9,15 @@ function ContainerTerminal() {
     const terminalContainer = document.getElementById('terminal-container');
     const term = new Terminal({cursorBlink: true});
     term.open(terminalContainer);
-    
-    const socket = new WebSocket('ws://localhost:8000');
-
+  
     // Read hash from url
     const pathSections = window.location.href.split("/");
     const termhash = pathSections[pathSections.length - 1];
     const terminalData = JSON.parse(localStorage.getItem(termhash));
+    // delete localhost here.
     console.log("Terminal Data", terminalData);
+  
+    const socket = new WebSocket('ws://localhost:8000');
 
     socket.addEventListener('open', function(event) {
       term.write("\r\n*** Connected to backend***\r\n");
