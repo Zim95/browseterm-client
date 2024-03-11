@@ -6,7 +6,7 @@ function ContainersList(
     {
         containerData,
         socketSSHContainer,
-        socketSSHUserMapping,
+        containerUserInfoMapping,
         removeContainer,
         setContainerIps,
         unsetContainerIps,
@@ -36,7 +36,7 @@ function ContainersList(
                                     <td>{value.ips.join(",")}</td>
                                     <ContainerListButtons
                                         socketSSHContainer={socketSSHContainer}
-                                        socketSSHUserMapping={socketSSHUserMapping}
+                                        containerUserInfoMapping={containerUserInfoMapping}
                                         removeContainer={removeContainer}
                                         setContainerIps={setContainerIps}
                                         unsetContainerIps={unsetContainerIps}

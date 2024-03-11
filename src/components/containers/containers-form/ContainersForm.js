@@ -9,7 +9,7 @@ function ContainersForm(
     {
         containerManager,
         setContainerData,
-        setSocketSSHUserMapping
+        setContainerUserInfoMapping
     }
 ) {
     const [formData, setFormData] = useState(
@@ -19,9 +19,7 @@ function ContainersForm(
             "container-password": ""
         }
     );
-
     const [imageOptions, setImageOptions] = useState([]);
-    const [imageNameLabelMapping, setImageNameLabelMapping] = useState({});
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
@@ -38,7 +36,7 @@ function ContainersForm(
             event.preventDefault();
             await createContainerBasedOnFormData.call(containerManager, formData);
             setContainerData(containerManager.containerDataMap);
-            setSocketSSHUserMapping(containerManager.socketSSHUserMapping);
+            setContainerUserInfoMapping(containerManager.containerUserInfoMapping);
         } catch (error) {
             console.log(error);
         }
@@ -59,11 +57,6 @@ function ContainersForm(
             const data = await response.json();
             const imageLabels = data.response;
             setImageOptions(imageLabels);
-            let imageLabelMapping = {};
-            for(let i=0; i<imageLabels.length; i++) {
-                imageLabelMapping[imageLabels[i].value] = imageLabels[i].label;
-            }
-            setImageNameLabelMapping(imageLabelMapping);
         } catch (error) {
             console.error("Error fetching data:", error);
         }

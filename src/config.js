@@ -8,6 +8,7 @@ const configuration = {
                 "stopContainerOffset": "stop",
                 "deleteContainerOffset": "delete",
                 "beaconOffset": "beacon",
+                "pingOffset": "ping"
             },
             "headers": {
                 "Content-Type": "application/json"
@@ -42,6 +43,7 @@ const configuration = {
                 "stopContainerOffset": "stop",
                 "deleteContainerOffset": "delete",
                 "beaconOffset": "beacon",
+                "pingOffset": "ping"
             },
             "headers": {
                 "Content-Type": "application/json"

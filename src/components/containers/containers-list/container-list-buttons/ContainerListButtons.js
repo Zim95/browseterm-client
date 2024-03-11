@@ -5,7 +5,7 @@ import config from '../../../../config';
 function ContainerListButtons(
     {
         socketSSHContainer,
-        socketSSHUserMapping,
+        containerUserInfoMapping,
         removeContainer,
         setContainerIps,
         unsetContainerIps,
@@ -44,7 +44,7 @@ function ContainerListButtons(
     const redirectWithData = () => {
         const data = {
             "socketSSHContainer": socketSSHContainer,
-            "socketSSHUserMapping": socketSSHUserMapping,
+            "containerUserInfoMapping": containerUserInfoMapping,
             "containerValue": containerValue
         }
         const hash = saveData(data);

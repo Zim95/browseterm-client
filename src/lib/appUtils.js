@@ -73,13 +73,21 @@ export class RequestMaker {
         return data;
     };
 
-    callUntilSuccess = async (maxAttempts = 15) => {
+    callUntilSuccess = async (maxAttempts=10, timeout=2000) => {
+        const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
+
         for (let attempt = 1; attempt <= maxAttempts; attempt++) {
             const response = await this.makeRequest();
             if (response.status === 200) {
                 return await this.parseJSONResponse(response);
             }
+            await sleep(timeout);
         }
         throw new Error("Maximum number of attempts reached without success.");
     };
 }
+
+
+export const getRandomNumberString = () => {
+    return Math.floor(Math.random() * 10000).toString();
+};
