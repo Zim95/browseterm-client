@@ -1,16 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from "react";
 import "./ContainerListButtons.css";
-import config from '../../../../config';
+import config from "../../../../config";
+import {
+    startContainer,
+    stopContainer,
+    deleteContainer
+} from "../../../../lib/containerUtils";
 
 function ContainerListButtons(
     {
-        socketSSHContainer,
-        containerUserInfoMapping,
-        removeContainer,
-        setContainerIps,
-        unsetContainerIps,
+        containerManager,
         containerValue,
-        removeSocketSSHUserMapping,
+        setContainerData,
+        socketSSHContainer,
+        setSocketSSHContainer,
+        containerUserInfoMapping,
+        setContainerUserInfoMapping
     }
 ) {
     const [containerState, setContainerState] = useState("stopped");
@@ -24,15 +29,51 @@ function ContainerListButtons(
             container_name: containerValue.name
         }
     );
-    const fetchJson = {
-        method: 'POST',
-        headers: headers,
-        body: body
-    }
 
-    const printContainerState = () => {
-        const currentState = containerState;
-        console.log("Container State", currentState);
+    const startContainerHandler = async function(containerValue) {
+        try {
+            await startContainer.call(
+                containerManager.current,
+                containerValue["full_ids"],
+                containerValue["container_network"],
+                containerValue["container_name"]
+            );
+            setContainerData(containerManager.current.containerDataMap);
+            setContainerState("started");
+        } catch(error) {
+            console.error("Start Container Button Error", error);
+        }
+    };
+
+    const stopContainerHandler = async function(containerValue) {
+        try {
+            await stopContainer.call(
+                containerManager,
+                containerValue["full_ids"],
+                containerValue["container_network"],
+                containerValue["container_name"]
+            );
+            setContainerData(containerManager.current.containerDataMap);
+            setContainerState("stopped");
+        } catch (error) {
+            console.error("Stop Container Button Error", error);
+        }
+    };
+
+    const deleteContainerHandler = async function(containerValue) {
+        try {
+            await deleteContainer.call(
+                containerManager,
+                containerValue["full_ids"],
+                containerValue["container_network"],
+                containerValue["container_name"]
+            );
+            setContainerData(containerManager.current.containerDataMap);
+            setContainerUserInfoMapping(containerManager.current.containerUserInfoMapping);
+            setContainerState("deleted");
+        } catch (error) {
+            
+        }
     };
 
     const saveData = (data) => {
@@ -50,54 +91,6 @@ function ContainerListButtons(
         const hash = saveData(data);
         const path = window.location.origin + "/terminal/" + hash;
         window.open(path, "_blank");
-    };
-
-    const makeRequest = async (offset, successCallback) => {
-        const url = baseURL + offset;
-        const response = await fetch(url, fetchJson);
-        if (response.status == 200) {
-            const json_response = await response.json();
-            successCallback(json_response);
-        } else {
-            const error_message = await response.text();
-            console.error(error_message);
-        }
-    };
-
-    const stopContainer = async () => {
-        console.log("Stopping Container...");
-        const successCallback = (response) => {
-            unsetContainerIps(response.response);
-            setContainerState("stopped");
-        };
-        const offset = config.containerAPI.urls.stopContainerOffset;
-        await makeRequest(offset, successCallback);
-    };
-
-    const startContainer = async () => {
-        console.log("Starting Container...");
-        const successCallback = (response) => {
-            setContainerIps(response.response);
-            setContainerState("started");
-        };
-        const offset = config.containerAPI.urls.startContainerOffset;
-        await makeRequest(offset, successCallback);
-    };
-
-    const deleteContainer = async () => {
-        console.log("Deleting Container...");
-        const successCallback = (response) => {
-            removeContainer(containerValue);
-            removeSocketSSHUserMapping(containerValue);
-            if (containerState != "stopped") {
-                // This part will never occur because, delete will only happen when container is stopped.
-                // Therefore, there will never be a delete if containerState != 'stopped'
-                unsetContainerIps(response.response);
-            }
-            setContainerState("deleted");
-        };
-        const offset = config.containerAPI.urls.deleteContainerOffset;
-        await makeRequest(offset, successCallback);
     };
 
     const saveContainer = () => {
@@ -134,9 +127,9 @@ function ContainerListButtons(
     };
 
     useEffect(() => {
-        window.addEventListener('beforeunload', unloadContainer);
+        window.addEventListener("beforeunload", unloadContainer);
         return () => {
-            window.removeEventListener('beforeunload', unloadContainer);
+            window.removeEventListener("beforeunload", unloadContainer);
         };
     }, [containerState]);
 
@@ -152,21 +145,21 @@ function ContainerListButtons(
             <button
                 className="button-container-button button-container-start"
                 disabled={(containerState == "stopped" ? false: true)}
-                onClick={startContainer}
+                onClick={() => {startContainerHandler(containerValue)}}
             >
                 <i className="fas fa-play"></i>
             </button>
             <button
                 className="button-container-button button-container-stop"
                 disabled={(containerState == "started" ? false: true)}
-                onClick={stopContainer}
+                onClick={() => {stopContainerHandler(containerValue)}}
             >
                 <i className="fas fa-stop"></i>
             </button>
             <button
                 className="button-container-button button-container-delete"
                 disabled={(containerState == "stopped" ? false: true)}
-                onClick={deleteContainer}
+                onClick={() => {deleteContainerHandler(containerValue)}}
             >
                 <i className="fas fa-trash"></i>
             </button>

@@ -117,6 +117,7 @@ export class ContainerUtils {
 
         Author: Namah Shrestha
         */
+        console.log("Start Container Request entry", containerIds, containerNetwork, containerName);
         let startContainerBody = {
             "container_ids": containerIds,
             "container_network": containerNetwork
@@ -127,9 +128,10 @@ export class ContainerUtils {
         const startRequestMaker = new RequestMaker(
             "POST", this.startUrl, startContainerBody, this.headers
         );
-
+        console.log("Start Container Body", startContainerBody);
         try{
             const response = await startRequestMaker.callOnce();
+            console.log("Start container response", response);
             return response;
         } catch(error) {
             throw new Error("Start Container Error", error);
@@ -178,24 +180,76 @@ export class ContainerUtils {
         }
     }
 
-    stopContainer() {
+    stopContainer = async(
+        containerIds,
+        containerNetwork,
+        containerName = null
+    ) => {
         /*
         Stops container by making a request.
         :params:
-        :returns:
+            containerIds: List of Ids of the container that we want to start.
+                NOTE: A single container may have multiple ids.
+                      In k8s, a single container may have many services.
+                      In such cases we will have multiple ids.
+                      They all belong to a single container.
+            containerNetwork: Network of these containers.
+            containerName: Name of the container. Can be left null for start.
+        :returns: null
 
         Author: Namah Shrestha
         */
+        let stopContainerBody = {
+            "container_ids": containerIds,
+            "container_network": containerNetwork
+        };
+        if(containerName !== null) {
+            stopContainerBody["container_name"] = containerName;
+        }
+        const stopRequestMaker = new RequestMaker(
+            "POST", this.stopUrl, stopContainerBody, this.headers
+        );
+
+        try{
+            const response = await stopRequestMaker.callOnce();
+            return response;
+        } catch(error) {
+            throw new Error("Stop Container Error", error);
+        }
     }
 
-    deleteContainer() {
+    deleteContainer = async() => {
         /*
         Deletes container by making a request.
         :params:
-        :returns:
+            containerIds: List of Ids of the container that we want to start.
+                NOTE: A single container may have multiple ids.
+                      In k8s, a single container may have many services.
+                      In such cases we will have multiple ids.
+                      They all belong to a single container.
+            containerNetwork: Network of these containers.
+            containerName: Name of the container. Can be left null for start.
+        :returns: null
 
         Author: Namah Shrestha
         */
+        let deleteContainerBody = {
+            "container_ids": containerIds,
+            "container_network": containerNetwork
+        };
+        if(containerName !== null) {
+            deleteContainerBody["container_name"] = containerName;
+        }
+        const deleteRequestMaker = new RequestMaker(
+            "POST", this.deleteUrl, deleteContainerBody, this.headers
+        );
+
+        try{
+            const response = await deleteRequestMaker.callOnce();
+            return response;
+        } catch(error) {
+            throw new Error("Delete Container Error", error);
+        }
     }
 }
 
@@ -232,7 +286,23 @@ const addContainerToContainerDataMap = function(containerResponse) {
             }
         }
     });
-}
+};
+
+const removeContainerFromContainerDataMap = function(containerName) {
+    /*
+        Remove a container from containerDataMap.
+        :params:
+            :containerName: Name of the container to be removed.
+        :returns: null
+
+        Author: Namah Shrestha
+    */
+    if(
+        this.containerDataMap.hasOwnProperty(containerName)
+    ) {
+        delete this.containerDataMap[containerName];
+    }
+};
 
 
 const addContainerUserInfoMapping = function(
@@ -257,7 +327,22 @@ const addContainerUserInfoMapping = function(
         "username": containerUsername,
         "password": containerPassword
     };
-}
+};
+
+
+const removeContainerUserInfoMapping = function(containerName) {
+    /*
+        Remove container username password from
+        containerUserInfoMapping.
+
+        :params:
+            :containerName: Name of the container.
+        Author: Namah Shrestha
+    */
+    if (this.containerUserInfoMapping.hasOwnProperty(containerName)) {
+        delete this.containerUserInfoMapping[containerName];
+    }
+};
 
 
 export const createContainerBasedOnFormData = async function(containerFormData) {
@@ -294,7 +379,7 @@ export const createContainerBasedOnFormData = async function(containerFormData) 
     } catch(error) {
         throw new Error("Create Container Error", error);
     }
-}
+};
 // ================================= Container Creation Forms ================================
 
 
@@ -327,7 +412,7 @@ const startSocketSSHContainer = async function(container) {
     } catch (error) {
       console.error("Error while starting container", error);
     }
-}
+};
 
 
 const createSocketSSHContainer = async function() {
@@ -361,7 +446,7 @@ const createSocketSSHContainer = async function() {
     } catch (error) {
         console.error("Error create socket ssh", error);
     }
-}
+};
 
 
 export const addSocketSSHContainer = async function() {
@@ -371,10 +456,148 @@ export const addSocketSSHContainer = async function() {
     } catch (error) {
         throw new Error("Add Socket SSH Handler", error);
     }   
-}
+};
 
 // ================================= SSH Socket Containers ====================================
 
+
+// ================================= Set and Unset Container IPS ===============================
+
+/*
+    You set container Ips when you start the container.
+    You unset container Ips when you stop/delete the container.
+
+    From where? From containerDataMap.
+    Note: When we call addContainerToContainerDataMap, we add everything except IPs.
+    This section is for IPs only.
+
+    We migtht get multiple ips for one container name,
+    For example, in case of k8s where we might have multiple services.
+    So, for each container we get, the container name will be the same,
+    but there might be multiple ip addresses.
+*/
+const setContainerIps = function(containers) {
+    containers.forEach((container) => {
+        if (this.containerDataMap.hasOwnProperty(container["container_name"])) {
+            this.containerDataMap[container["container_name"]]["ips"].push(container["container_ip"]);
+        }
+    });
+};
+
+const unsetContainerIps = function(containers) {
+    containers.forEach((container) => {
+        if (this.containerDataMap.hasOwnProperty(container["container_name"])) {
+            this.containerDataMap[container["container_name"]]["ips"] = [];
+        }
+    });
+}; 
+// ================================= Set and Unset Container IPS ===============================
+
+
+// ================================= Container Buttons Operations ==============================
+export const startContainer = async function(
+    containerIds,
+    containerNetwork,
+    containerName
+) {
+    /*
+        Start a container.
+            :params:    
+                :containerIds: List of Ids of the container that we want to start.
+                    NOTE: A single container may have multiple ids.
+                        In k8s, a single container may have many services.
+                        In such cases we will have multiple ids.
+                        They all belong to a single container.
+                :containerNetwork: Network of these containers.
+                :containerName: Name of the container.
+            :returns: null
+
+        To be called with .call function.
+
+        Author: Namah Shrestha
+    */
+    try {
+        console.log("Start Container entry", this, containerIds, containerNetwork, containerName);
+        const startContainerResponse = await this.containerUtils.startContainer(
+            containerIds,
+            containerNetwork,
+            containerName
+        );
+        setContainerIps(startContainerResponse);
+    } catch (error) {
+        throw new Error("Start Container Error", error);
+    }
+};
+
+
+export const stopContainer = async function(
+    containerIds,
+    containerNetwork,
+    containerName
+) {
+    /*
+        Stop a container.
+            :params:    
+                :containerIds: List of Ids of the container that we want to start.
+                    NOTE: A single container may have multiple ids.
+                        In k8s, a single container may have many services.
+                        In such cases we will have multiple ids.
+                        They all belong to a single container.
+                :containerNetwork: Network of these containers.
+                :containerName: Name of the container.
+            :returns: null
+
+        To be called with .call function.
+
+        Author: Namah Shrestha
+    */
+    try {
+        const stopContainerResponse = await this.containerUtils.stopContainer(
+            containerIds,
+            containerNetwork,
+            containerName
+        );
+        unsetContainerIps(stopContainerResponse);
+    } catch (error) {
+        throw new Error("Stop Container Error", error);
+    }
+};
+
+
+export const deleteContainer = async function(
+    containerIds,
+    containerNetwork,
+    containerName
+) {
+    /*
+        Delete a container.
+            :params:    
+                :containerIds: List of Ids of the container that we want to start.
+                    NOTE: A single container may have multiple ids.
+                        In k8s, a single container may have many services.
+                        In such cases we will have multiple ids.
+                        They all belong to a single container.
+                :containerNetwork: Network of these containers.
+                :containerName: Name of the container.
+            :returns: null
+
+        To be called with .call function.
+
+        Author: Namah Shrestha
+    */
+    try {
+        await this.containerUtils.deleteContainer(
+            containerIds,
+            containerNetwork,
+            containerName
+        );
+        removeContainerFromContainerDataMap(containerName);
+        removeContainerUserInfoMapping(containerName);
+    } catch (error) {
+        throw new Error("Delete Container Error", error);
+    }
+};
+// ================================= Container Buttons Operations ==============================
 
 // ================================= Container Manager ========================================
 export class ContainerManager {
@@ -386,7 +609,7 @@ export class ContainerManager {
 
         // socket ssh containers
         this.socketSSHContainer = null;
-        this.socketSSHContainers = [];
+        this.socketSSHContainers = []; // For future
     }
 }
 // ================================= Container Manager ========================================

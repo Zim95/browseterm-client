@@ -34,11 +34,11 @@ function ContainersForm(
     const createContainer = async (event) => {
         try {
             event.preventDefault();
-            await createContainerBasedOnFormData.call(containerManager, formData);
-            setContainerData(containerManager.containerDataMap);
-            setContainerUserInfoMapping(containerManager.containerUserInfoMapping);
+            await createContainerBasedOnFormData.call(containerManager.current, formData);
+            setContainerData(containerManager.current.containerDataMap);
+            setContainerUserInfoMapping(containerManager.current.containerUserInfoMapping);
         } catch (error) {
-            console.log(error);
+            console.error("Create container error", error);
         }
     };
 

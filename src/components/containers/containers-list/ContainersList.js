@@ -4,14 +4,23 @@ import './ContainersList.css';
 
 function ContainersList(
     {
+        containerManager,
         containerData,
+        setContainerData,
         socketSSHContainer,
+        setSocketSSHContainer,
         containerUserInfoMapping,
-        removeContainer,
-        setContainerIps,
-        unsetContainerIps,
-        removeSocketSSHUserMapping,
+        setContainerUserInfoMapping
     }
+    // {
+    //     containerData,
+    //     socketSSHContainer,
+    //     containerUserInfoMapping,
+    //     removeContainer,
+    //     setContainerIps,
+    //     unsetContainerIps,
+    //     removeSocketSSHUserMapping,
+    // }
 ) {
     return (
         <div className="container-list">
@@ -35,13 +44,13 @@ function ContainersList(
                                     <td>{value.image}</td>
                                     <td>{value.ips.join(",")}</td>
                                     <ContainerListButtons
-                                        socketSSHContainer={socketSSHContainer}
-                                        containerUserInfoMapping={containerUserInfoMapping}
-                                        removeContainer={removeContainer}
-                                        setContainerIps={setContainerIps}
-                                        unsetContainerIps={unsetContainerIps}
+                                        containerManager={containerManager}
                                         containerValue={value}
-                                        removeSocketSSHUserMapping={removeSocketSSHUserMapping}
+                                        setContainerData={setContainerData}
+                                        socketSSHContainer={socketSSHContainer}
+                                        setSocketSSHContainer={setSocketSSHContainer}
+                                        containerUserInfoMapping={containerUserInfoMapping}
+                                        setContainerUserInfoMapping={setContainerUserInfoMapping}
                                     />
                                 </tr>
                             );

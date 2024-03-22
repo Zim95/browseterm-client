@@ -1,19 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import ContainersForm from './containers-form/ContainersForm';
 import ContainersList from './containers-list/ContainersList';
 import "./Containers.css";
 import config from '../../config';
 
-import { ContainerManager, addSocketSSHContainer } from '../../lib/containerUtils';
+import { ContainerManager, addSocketSSHContainer } from "../../lib/containerUtils";
 
 /*
   Add the containerManager here and pass it around to all components.
-
 */
 
 function Containers() {
   // Container Manager object
-  const containerManager = new ContainerManager(config);
+  const containerManager = useRef(new ContainerManager(config));
 
   // State
   const [containerData, setContainerData] = useState({});
@@ -55,7 +54,7 @@ function Containers() {
   useEffect(() => {
     const initializeCreateContainer = async() => {
       try {
-        await addSocketSSHContainer.call(containerManager);
+        await addSocketSSHContainer.call(containerManager.current);
         setSocketSSHContainer(containerManager.socketSSHContainer);
       } catch (error) {
         console.error(error);
@@ -71,41 +70,6 @@ function Containers() {
     };
   }, [socketSSHContainer]);
 
-  const removeContainer = (container) => {
-    let updatedContainerData = { ...containerData };
-    if (updatedContainerData.hasOwnProperty(container.name)) {
-      delete updatedContainerData[container.name];
-    }
-    setContainerData(updatedContainerData);
-  };
-
-  const setContainerIps = (containers) => {
-    let updatedContainerData = { ...containerData };
-    containers.forEach((container) => {
-      if (updatedContainerData.hasOwnProperty(container.container_name)) {
-        updatedContainerData[container.container_name]['ips'].push(container.container_ip);
-      }
-    });
-    setContainerData(updatedContainerData);
-  };
-
-  const unsetContainerIps = (containers) => {
-    let updatedContainerData = { ...containerData };
-    containers.forEach((container) => {
-      if (updatedContainerData.hasOwnProperty(container.container_name)) {
-        updatedContainerData[container.container_name]['ips'] = [];
-      }
-    });
-    setContainerData(updatedContainerData);
-  };
-
-  const removeSocketSSHUserMapping = (container) => {
-    let updatedSocketSSHUserMapping = {...socketSSHUserMapping};
-    if(updatedSocketSSHUserMapping.hasOwnProperty(container.name)) {
-      delete updatedSocketSSHUserMapping[container.name];
-    }
-    setSocketSSHUserMapping(updatedSocketSSHUserMapping);
-  };
 
   return (
     <div>
@@ -115,13 +79,13 @@ function Containers() {
         setContainerUserInfoMapping={setContainerUserInfoMapping}
       />
       <ContainersList
+        containerManager={containerManager}
         containerData={containerData}
+        setContainerData={setContainerData}
         socketSSHContainer={socketSSHContainer}
+        setSocketSSHContainer={setSocketSSHContainer}
         containerUserInfoMapping={containerUserInfoMapping}
-        removeContainer={removeContainer}
-        setContainerIps={setContainerIps}
-        unsetContainerIps={unsetContainerIps}
-        removeSocketSSHUserMapping={removeSocketSSHUserMapping}
+        setContainerUserInfoMapping={setContainerUserInfoMapping}
       />
     </div>
   );
