@@ -117,7 +117,6 @@ export class ContainerUtils {
 
         Author: Namah Shrestha
         */
-        console.log("Start Container Request entry", containerIds, containerNetwork, containerName);
         let startContainerBody = {
             "container_ids": containerIds,
             "container_network": containerNetwork
@@ -128,10 +127,8 @@ export class ContainerUtils {
         const startRequestMaker = new RequestMaker(
             "POST", this.startUrl, startContainerBody, this.headers
         );
-        console.log("Start Container Body", startContainerBody);
         try{
             const response = await startRequestMaker.callOnce();
-            console.log("Start container response", response);
             return response;
         } catch(error) {
             throw new Error("Start Container Error", error);
@@ -517,13 +514,12 @@ export const startContainer = async function(
         Author: Namah Shrestha
     */
     try {
-        console.log("Start Container entry", this, containerIds, containerNetwork, containerName);
         const startContainerResponse = await this.containerUtils.startContainer(
             containerIds,
             containerNetwork,
             containerName
         );
-        setContainerIps(startContainerResponse);
+        setContainerIps.call(this, startContainerResponse);
     } catch (error) {
         throw new Error("Start Container Error", error);
     }
@@ -557,7 +553,7 @@ export const stopContainer = async function(
             containerNetwork,
             containerName
         );
-        unsetContainerIps(stopContainerResponse);
+        unsetContainerIps.call(this, stopContainerResponse);
     } catch (error) {
         throw new Error("Stop Container Error", error);
     }
@@ -591,8 +587,8 @@ export const deleteContainer = async function(
             containerNetwork,
             containerName
         );
-        removeContainerFromContainerDataMap(containerName);
-        removeContainerUserInfoMapping(containerName);
+        removeContainerFromContainerDataMap.call(this, containerName);
+        removeContainerUserInfoMapping.call(this, containerName);
     } catch (error) {
         throw new Error("Delete Container Error", error);
     }

@@ -35,8 +35,8 @@ function ContainerListButtons(
             await startContainer.call(
                 containerManager.current,
                 containerValue["full_ids"],
-                containerValue["container_network"],
-                containerValue["container_name"]
+                containerValue["network"],
+                containerValue["name"]
             );
             setContainerData(containerManager.current.containerDataMap);
             setContainerState("started");
@@ -48,10 +48,10 @@ function ContainerListButtons(
     const stopContainerHandler = async function(containerValue) {
         try {
             await stopContainer.call(
-                containerManager,
+                containerManager.current,
                 containerValue["full_ids"],
-                containerValue["container_network"],
-                containerValue["container_name"]
+                containerValue["network"],
+                containerValue["name"]
             );
             setContainerData(containerManager.current.containerDataMap);
             setContainerState("stopped");
@@ -63,10 +63,10 @@ function ContainerListButtons(
     const deleteContainerHandler = async function(containerValue) {
         try {
             await deleteContainer.call(
-                containerManager,
+                containerManager.current,
                 containerValue["full_ids"],
-                containerValue["container_network"],
-                containerValue["container_name"]
+                containerValue["network"],
+                containerValue["name"]
             );
             setContainerData(containerManager.current.containerDataMap);
             setContainerUserInfoMapping(containerManager.current.containerUserInfoMapping);

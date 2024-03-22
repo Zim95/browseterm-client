@@ -12,15 +12,6 @@ function ContainersList(
         containerUserInfoMapping,
         setContainerUserInfoMapping
     }
-    // {
-    //     containerData,
-    //     socketSSHContainer,
-    //     containerUserInfoMapping,
-    //     removeContainer,
-    //     setContainerIps,
-    //     unsetContainerIps,
-    //     removeSocketSSHUserMapping,
-    // }
 ) {
     return (
         <div className="container-list">

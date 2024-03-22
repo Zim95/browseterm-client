@@ -55,7 +55,7 @@ function Containers() {
     const initializeCreateContainer = async() => {
       try {
         await addSocketSSHContainer.call(containerManager.current);
-        setSocketSSHContainer(containerManager.socketSSHContainer);
+        setSocketSSHContainer(containerManager.current.socketSSHContainer);
       } catch (error) {
         console.error(error);
       }
