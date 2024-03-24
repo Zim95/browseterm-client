@@ -72,7 +72,7 @@ function ContainerListButtons(
             setContainerUserInfoMapping({...containerManager.current.containerUserInfoMapping});
             setContainerState("deleted");
         } catch (error) {
-            
+            console.error("Delete Container Button Error", error);
         }
     };
 

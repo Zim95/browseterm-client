@@ -215,7 +215,11 @@ export class ContainerUtils {
         }
     }
 
-    deleteContainer = async() => {
+    deleteContainer = async(
+        containerIds,
+        containerNetwork,
+        containerName = null
+    ) => {
         /*
         Deletes container by making a request.
         :params:
