@@ -9,15 +9,22 @@ function ContainerTerminal() {
     const terminalContainer = document.getElementById('terminal-container');
     const term = new Terminal({cursorBlink: true});
     term.open(terminalContainer);
-  
+
     // Read hash from url
     const pathSections = window.location.href.split("/");
     const termhash = pathSections[pathSections.length - 1];
     const terminalData = JSON.parse(localStorage.getItem(termhash));
-    // delete localhost here.
-    console.log("Terminal Data", terminalData);
-  
-    const socket = new WebSocket('ws://localhost:8000');
+    localStorage.removeItem(termhash);
+
+    // Setup Socket Connection
+    // Only when this application also runs inside the same network.
+    // In case of K8S we will get a loadbalancer ip which should work.
+    // Since we will not deploy Front end inside k8s cluster. But rather through CDNs.
+    // const SSHSocketContainerIP = terminalData.socketSSHContainer["container_ip"];
+    const SSHSocketContainerIP = "localhost";
+    const SSHSocketContainerPort = terminalData.socketSSHContainer["container_port"].toString();
+    const webSocketUrl = `ws://${SSHSocketContainerIP}:${SSHSocketContainerPort}`;
+    const socket = new WebSocket(webSocketUrl);
 
     socket.addEventListener('open', function(event) {
       term.write("\r\n*** Connected to backend***\r\n");
@@ -27,9 +34,9 @@ function ContainerTerminal() {
           ssh_hash: termhash,
           ssh_host: terminalData.containerValue.ips[0], // Any one of the ips will work.
           ssh_port: 22,
-          ssh_username: terminalData.socketSSHUserMapping[
+          ssh_username: terminalData.containerUserInfoMapping[
             terminalData.containerValue.name].username,
-          ssh_password: terminalData.socketSSHUserMapping[
+          ssh_password: terminalData.containerUserInfoMapping[
             terminalData.containerValue.name].password,
       };
 
