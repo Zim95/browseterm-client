@@ -4,7 +4,11 @@ import ContainersList from './containers-list/ContainersList';
 import "./Containers.css";
 import config from '../../config';
 
-import { ContainerManager, addSocketSSHContainer } from "../../lib/containerUtils";
+import {
+  ContainerManager,
+  addSocketSSHContainer,
+  unloadContainer
+} from "../../lib/containerUtils";
 
 /*
   Add the containerManager here and pass it around to all components.
@@ -19,36 +23,6 @@ function Containers() {
   const [socketSSHContainer, setSocketSSHContainer] = useState(null);
   const [containerUserInfoMapping, setContainerUserInfoMapping] = useState({});
 
-  const unloadContainer = async () => {
-    const unloadContainerBody = JSON.stringify(
-      {
-          container_ids: [socketSSHContainer.container_id],
-          container_network: socketSSHContainer.container_network,
-          container_name: socketSSHContainer.container_name,
-      }
-    );
-    const unloadContainerHeaders = config.containerAPI.headers;
-    const stopOffset = config.containerAPI.urls.stopContainerOffset;
-    const stopUrl = config.containerAPI.urls.baseURL + stopOffset;
-    const stopBeaconBody = {
-        "method": "POST",
-        "url": stopUrl,
-        "headers": unloadContainerHeaders,
-        "body": unloadContainerBody,
-    }
-    const deleteOffset = config.containerAPI.urls.deleteContainerOffset;
-    const deleteUrl = config.containerAPI.urls.baseURL + deleteOffset;
-    const deleteBeaconBody = {
-        "method": "POST",
-        "url": deleteUrl,
-        "headers": unloadContainerHeaders,
-        "body": unloadContainerBody,
-    };
-    const beaconBody = JSON.stringify([stopBeaconBody, deleteBeaconBody]);
-    const beaconOffset = config.containerAPI.urls.beaconOffset;
-    const beaconUrl = config.containerAPI.urls.baseURL + beaconOffset;
-    navigator.sendBeacon(beaconUrl, new Blob([beaconBody]));
-  };
 
   useEffect(() => {
     const initializeCreateContainer = async() => {
@@ -63,9 +37,18 @@ function Containers() {
   }, []);
 
   useEffect(() => {
-    window.addEventListener('unload', unloadContainer);
+    /* Remove socketSSHContainer on unload*/
+    const unloadContainerHandler = async () => {
+      await unloadContainer.call(
+        containerManager.current,
+        [socketSSHContainer["container_id"]],
+        socketSSHContainer["container_name"],
+        socketSSHContainer["container_network"]
+      );
+    };
+    window.addEventListener('unload', unloadContainerHandler);
     return () => {
-        window.removeEventListener('unload', unloadContainer);
+        window.removeEventListener('unload', unloadContainerHandler);
     };
   }, [socketSSHContainer]);
 
@@ -82,7 +65,6 @@ function Containers() {
         containerData={containerData}
         setContainerData={setContainerData}
         socketSSHContainer={socketSSHContainer}
-        setSocketSSHContainer={setSocketSSHContainer}
         containerUserInfoMapping={containerUserInfoMapping}
         setContainerUserInfoMapping={setContainerUserInfoMapping}
       />

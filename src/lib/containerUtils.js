@@ -289,6 +289,7 @@ const addContainerToContainerDataMap = function(containerResponse) {
     });
 };
 
+
 const removeContainerFromContainerDataMap = function(containerName) {
     /*
         Remove a container from containerDataMap.
@@ -485,6 +486,7 @@ const setContainerIps = function(containers) {
     });
 };
 
+
 const unsetContainerIps = function(containers) {
     containers.forEach((container) => {
         if (this.containerDataMap.hasOwnProperty(container["container_name"])) {
@@ -598,6 +600,41 @@ export const deleteContainer = async function(
     }
 };
 // ================================= Container Buttons Operations ==============================
+
+
+// ================================= Unload Container =========================================
+export const unloadContainer = async function(
+    containerIds,
+    containerName,
+    containerNetwork,
+    containerState=null
+) {
+    let beaconBody = [];
+    let jsonBody = JSON.stringify({
+        "container_ids": containerIds,
+        "container_name": containerName,
+        "container_network": containerNetwork
+    });
+    if(containerState==null || containerState != "stopped") {
+        beaconBody.push({
+            "method": "POST",
+            "url": this.containerUtils.stopUrl,
+            "headers": this.containerUtils.headers,
+            "body": jsonBody,
+        });
+    }
+    beaconBody.push({
+        "method": "POST",
+        "url": this.containerUtils.deleteUrl,
+        "headers": this.containerUtils.headers,
+        "body": jsonBody,
+    });
+    navigator.sendBeacon(
+        this.containerUtils.beaconUrl,
+        new Blob([JSON.stringify(beaconBody)])
+    );
+};
+// ================================= Unload Container =========================================
 
 // ================================= Container Manager ========================================
 export class ContainerManager {

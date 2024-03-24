@@ -8,7 +8,6 @@ function ContainersList(
         containerData,
         setContainerData,
         socketSSHContainer,
-        setSocketSSHContainer,
         containerUserInfoMapping,
         setContainerUserInfoMapping
     }
@@ -39,7 +38,6 @@ function ContainersList(
                                         containerValue={value}
                                         setContainerData={setContainerData}
                                         socketSSHContainer={socketSSHContainer}
-                                        setSocketSSHContainer={setSocketSSHContainer}
                                         containerUserInfoMapping={containerUserInfoMapping}
                                         setContainerUserInfoMapping={setContainerUserInfoMapping}
                                     />

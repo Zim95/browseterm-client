@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import "./ContainerListButtons.css";
-import config from "../../../../config";
 import {
     startContainer,
     stopContainer,
-    deleteContainer
+    deleteContainer,
+    unloadContainer
 } from "../../../../lib/containerUtils";
 
 function ContainerListButtons(
@@ -13,22 +13,12 @@ function ContainerListButtons(
         containerValue,
         setContainerData,
         socketSSHContainer,
-        setSocketSSHContainer,
         containerUserInfoMapping,
         setContainerUserInfoMapping
     }
 ) {
     const [containerState, setContainerState] = useState("stopped");
 
-    const baseURL = config.containerAPI.urls.baseURL;
-    const headers = config.containerAPI.headers;
-    const body = JSON.stringify(
-        {
-            container_ids: containerValue.full_ids,
-            container_network: containerValue.network,
-            container_name: containerValue.name
-        }
-    );
 
     const startContainerHandler = async function(containerValue) {
         try {
@@ -45,6 +35,7 @@ function ContainerListButtons(
         }
     };
 
+
     const stopContainerHandler = async function(containerValue) {
         try {
             await stopContainer.call(
@@ -59,6 +50,7 @@ function ContainerListButtons(
             console.error("Stop Container Button Error", error);
         }
     };
+
 
     const deleteContainerHandler = async function(containerValue) {
         try {
@@ -75,6 +67,7 @@ function ContainerListButtons(
             console.error("Delete Container Button Error", error);
         }
     };
+
 
     const saveData = (data) => {
         const hash = Math.floor(Math.random() * 10000).toString();
@@ -97,39 +90,18 @@ function ContainerListButtons(
         console.log("Saving Container");
     };
 
-    const unloadContainer = async () => {
-        let beaconBody = [];
-        if (containerState != "stopped") {
-            const stopOffset = config.containerAPI.urls.stopContainerOffset;
-            const stopUrl = baseURL + stopOffset;
-            const stopBeaconBody = {
-                "method": "POST",
-                "url": stopUrl,
-                "headers": headers,
-                "body": body,
-            }
-            beaconBody.push(stopBeaconBody);   
-        };
-        const deleteOffset = config.containerAPI.urls.deleteContainerOffset;
-        const deleteUrl = baseURL + deleteOffset;
-        const deleteBeaconBody = {
-            "method": "POST",
-            "url": deleteUrl,
-            "headers": headers,
-            "body": body,
-        };
-        beaconBody.push(deleteBeaconBody);
-
-        const beaconOffset = config.containerAPI.urls.beaconOffset;
-        const beaconUrl = baseURL + beaconOffset;
-        beaconBody = JSON.stringify(beaconBody);
-        navigator.sendBeacon(beaconUrl, new Blob([beaconBody]));
-    };
-
     useEffect(() => {
-        window.addEventListener("beforeunload", unloadContainer);
+        const unloadContainerHandler = async () => {
+            await unloadContainer.call(
+                containerManager.current,
+                containerValue["full_ids"],
+                containerValue["name"],
+                containerValue["network"]
+            );
+        };
+        window.addEventListener('beforeunload', unloadContainerHandler);
         return () => {
-            window.removeEventListener("beforeunload", unloadContainer);
+            window.removeEventListener('beforeunload', unloadContainerHandler);
         };
     }, [containerState]);
 
