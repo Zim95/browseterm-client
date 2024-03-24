@@ -96,7 +96,8 @@ function ContainerListButtons(
                 containerManager.current,
                 containerValue["full_ids"],
                 containerValue["name"],
-                containerValue["network"]
+                containerValue["network"],
+                containerState
             );
         };
         window.addEventListener('beforeunload', unloadContainerHandler);

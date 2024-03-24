@@ -615,7 +615,7 @@ export const unloadContainer = async function(
         "container_name": containerName,
         "container_network": containerNetwork
     });
-    if(containerState==null || containerState != "stopped") {
+    if(containerState == null || containerState != "stopped") {
         beaconBody.push({
             "method": "POST",
             "url": this.containerUtils.stopUrl,
