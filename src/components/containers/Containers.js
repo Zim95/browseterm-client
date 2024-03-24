@@ -19,7 +19,6 @@ function Containers() {
   const [socketSSHContainer, setSocketSSHContainer] = useState(null);
   const [containerUserInfoMapping, setContainerUserInfoMapping] = useState({});
 
-
   const unloadContainer = async () => {
     const unloadContainerBody = JSON.stringify(
       {
@@ -55,7 +54,7 @@ function Containers() {
     const initializeCreateContainer = async() => {
       try {
         await addSocketSSHContainer.call(containerManager.current);
-        setSocketSSHContainer(containerManager.current.socketSSHContainer);
+        setSocketSSHContainer({...containerManager.current.socketSSHContainer});
       } catch (error) {
         console.error(error);
       }

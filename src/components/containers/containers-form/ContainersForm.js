@@ -35,8 +35,8 @@ function ContainersForm(
         try {
             event.preventDefault();
             await createContainerBasedOnFormData.call(containerManager.current, formData);
-            setContainerData(containerManager.current.containerDataMap);
-            setContainerUserInfoMapping(containerManager.current.containerUserInfoMapping);
+            setContainerData({...containerManager.current.containerDataMap});
+            setContainerUserInfoMapping({...containerManager.current.containerUserInfoMapping});
         } catch (error) {
             console.error("Create container error", error);
         }

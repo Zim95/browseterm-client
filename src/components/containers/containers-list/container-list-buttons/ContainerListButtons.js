@@ -38,7 +38,7 @@ function ContainerListButtons(
                 containerValue["network"],
                 containerValue["name"]
             );
-            setContainerData(containerManager.current.containerDataMap);
+            setContainerData({...containerManager.current.containerDataMap});
             setContainerState("started");
         } catch(error) {
             console.error("Start Container Button Error", error);
@@ -53,7 +53,7 @@ function ContainerListButtons(
                 containerValue["network"],
                 containerValue["name"]
             );
-            setContainerData(containerManager.current.containerDataMap);
+            setContainerData({...containerManager.current.containerDataMap});
             setContainerState("stopped");
         } catch (error) {
             console.error("Stop Container Button Error", error);
@@ -68,8 +68,8 @@ function ContainerListButtons(
                 containerValue["network"],
                 containerValue["name"]
             );
-            setContainerData(containerManager.current.containerDataMap);
-            setContainerUserInfoMapping(containerManager.current.containerUserInfoMapping);
+            setContainerData({...containerManager.current.containerDataMap});
+            setContainerUserInfoMapping({...containerManager.current.containerUserInfoMapping});
             setContainerState("deleted");
         } catch (error) {
             
