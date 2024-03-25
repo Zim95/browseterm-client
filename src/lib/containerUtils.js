@@ -368,6 +368,7 @@ export const createContainerBasedOnFormData = async function(containerFormData) 
             containerNetwork,
             null,
             {
+                "SSH_USERNAME": userName,
                 "SSH_PASSWORD": containerFormData["container-password"],
             }
         );

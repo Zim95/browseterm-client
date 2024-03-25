@@ -16,6 +16,8 @@ function ContainerTerminal() {
     const terminalData = JSON.parse(localStorage.getItem(termhash));
     localStorage.removeItem(termhash);
 
+    console.log(terminalData);
+
     // Setup Socket Connection
     // Only when this application also runs inside the same network.
     // In case of K8S we will get a loadbalancer ip which should work.
