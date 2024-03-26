@@ -1,5 +1,6 @@
 import React, {Suspense, useState} from "react";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
+import Protected from './components/Protected';
 
 import "./App.css";
 
@@ -11,6 +12,7 @@ const Containers = React.lazy(() => import('./components/containers/Containers')
 const Subscribe = React.lazy(() => import('./components/subscribe/Subscribe'));
 const SignIn = React.lazy(() => import('./components/signin/SignIn'));
 const Terminal = React.lazy(() => import('./components/terminal/ContainerTerminal'));
+
 
 function App() {
     const [isNavbarRetracted, setIsNavbarRetracted] = useState(false);
@@ -37,7 +39,11 @@ function App() {
                         <Routes>
                             <Route path="/" element={<Home/>}/>
                             <Route path="/profile" element={<Profile/>}/>
-                            <Route path="/containers" element={<Containers/>}/>
+                            <Route path="/containers" element={
+                                <Protected>
+                                    <Containers/>
+                                </Protected>
+                            }/>
                             <Route path="/subscribe" element={<Subscribe/>}/>
                             <Route path="/signin" element={<SignIn/>}/>
                             <Route path="/terminal/:termhash" element={<Terminal/>}/>

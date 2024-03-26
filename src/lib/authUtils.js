@@ -9,6 +9,32 @@ import config from "../config";
 import { RequestMaker } from "./appUtils";
 
 
+export class BaseAuthService {
+    static logIn() {
+        console.log("Login");
+    }
+
+    static logOut() {
+        console.log("Logout");
+    }
+
+    static isLoggedIn() {
+        return false;  
+    }
+}
+
+
+export class GoogleAuthService extends BaseAuthService {
+    static logIn() {
+
+    }
+
+    static logOut() {
+
+    }
+}
+
+
 export class Authorizer {
     constructor(config) {
         this.authServerBaseURL = config.authAPI.authServerBaseURL;
@@ -24,9 +50,13 @@ export class Authorizer {
         /*
             Get the user info logic goes in here.
         */
-       return {
-        "userName": "Zim95"
-       }; 
+        return {
+            "userName": "Zim95"
+        }; 
+    };
+
+    isLoggedIn = () => {
+        return false;
     };
 
     isTokenValid = () => {
