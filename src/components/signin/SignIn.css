@@ -1,0 +1,100 @@
+.signin-container {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 768px) {
+    /* Adjust flex container direction to column */
+    .signin-container {
+      flex-direction: column;
+    }
+}
+
+/* Left side */
+.signin-container-info {
+    height: 100vh;
+    width: 100%;
+    background-color: #2ecc71;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.signin-container-info-gif {
+    width: 100%;
+    text-align: center;
+}
+
+.signin-container-info-gif-img {
+    border-radius: 2%;
+    width: 95%;
+}
+
+/* Right side */
+.signin-container-userdata {
+    height: 100vh;
+    width: 100%;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.signin-container-userdata .signin-container-form {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 80%;
+}
+.signin-container-userdata .signin-container-logo {
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    width: 80%;
+}
+
+.signin-container-form-auth-buttons {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* Signin logo styles */
+.signin-container-logo {
+    text-align: center; /* Align the content to the center */
+}
+
+.signin-header {
+    font-family: sans-serif;
+    font-size: 24px; /* Adjust as needed */
+    margin-bottom: 10px; /* Add some space below the header */
+    color:#2ecc71;
+  }
+  
+.tagline {
+    font-family: sans-serif;
+    font-size: 16px; /* Adjust as needed */
+    color: #2ecc71; /* Optionally adjust the color */
+}
+
+/* ANIMATION*/
+.signin-header,
+.tagline {
+  opacity: 0; /* Initially hide the heading and tagline */
+  animation: fadeIn 1s ease forwards; /* Apply the fadeIn animation */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0; /* Start with opacity 0 */
+  }
+  to {
+    opacity: 1; /* End with opacity 1 */
+  }
+}

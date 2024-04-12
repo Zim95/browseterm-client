@@ -23,7 +23,8 @@ function App() {
 
     const isNavbarRequired = () => {
         const notNeededRoutes = [
-            "/terminal"
+            "/terminal",
+            "/signin"
         ];
 
         const path = window.location.href;
@@ -45,7 +46,7 @@ function App() {
                                 </Protected>
                             }/>
                             <Route path="/subscribe" element={<Subscribe/>}/>
-                            <Route path="/signin" element={<SignIn/>}/>
+                            <Route path="/signin" element={<SignIn toggleNavbarRetraction={toggleNavbarRetraction}/>}/>
                             <Route path="/terminal/:termhash" element={<Terminal/>}/>
                         </Routes>
                     </Suspense>

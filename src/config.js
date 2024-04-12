@@ -17,7 +17,8 @@ const configuration = {
         "dataApi": {
             "urls": {
                 "baseURL": "http://localhost:8004/",
-                "imageOptions": "image_options"
+                "imageOptions": "image_options",
+                "me": "@me"
             },
             "headers": {
                 "Content-Type": "application/json"
