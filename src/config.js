@@ -18,7 +18,9 @@ const configuration = {
             "urls": {
                 "baseURL": "http://localhost:8004/",
                 "imageOptions": "image_options",
-                "me": "@me"
+                "me": "@me",
+                "googleLogInUrl": "google-login",
+                "githubLogInUrl": "github-login"
             },
             "headers": {
                 "Content-Type": "application/json"

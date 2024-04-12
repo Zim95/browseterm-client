@@ -6,7 +6,14 @@ import githubicon from "./images/github_icon.png";
 
 import SignInButton from "./signin-buttons/SignInButtons";
 
+import { Authorizer, googleLoginHandler, githubLoginHandler } from '../../lib/authUtils';
+import config from '../../config';
+
+
 function SignIn({toggleNavbarRetraction}) {
+
+  const authorizer = new Authorizer(config);
+
   useEffect(() => {
     toggleNavbarRetraction();
   }, []);
@@ -27,10 +34,14 @@ function SignIn({toggleNavbarRetraction}) {
               <SignInButton
                 buttonImage={googleicon}
                 buttonText="Sign In with Google"
+                buttonSubmit={googleLoginHandler}
+                authorizer={authorizer}
               />
               <SignInButton
                 buttonImage={githubicon}
                 buttonText="Sign In with Github"
+                buttonSubmit={githubLoginHandler}
+                authorizer={authorizer}
               />
             </div> 
           </div>  
