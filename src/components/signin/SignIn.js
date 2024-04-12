@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import "./SignIn.css";
 import terminalgif from "./images/terminal.gif";
 import googleicon from "./images/google_icon.png";
