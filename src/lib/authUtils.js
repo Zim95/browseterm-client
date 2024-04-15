@@ -13,8 +13,7 @@ export class Authorizer {
     constructor(config) {
         this.baseURL = config.dataApi.urls.baseURL;
         this.meURL = this.baseURL + config.dataApi.urls.me;
-        this.googleLoginUrl = this.baseURL + config.dataApi.urls.googleLogInUrl;
-        this.githubLoginUrl = this.baseURL + config.dataApi.urls.githubLogInUrl;
+        this.clientInformation = config.clientInformation;
         this.headers = config.dataApi.headers;
     }
 
@@ -32,31 +31,62 @@ export class Authorizer {
         }
     }
 
-    getLoginUrl = (loginProvider) => {
-        const urlChoice = {
-            "google": this.googleLoginUrl,
-            "github": this.githubLoginUrl
-        };
-        const url = urlChoice[loginProvider] || null;
-        if (url === null) {
-            throw new Error("Invalid loginProvider");
-        }
-        return url;
+    getState = () => {
+        // Create a unint8 empty array.
+        const stateArray = new Uint8Array(16);
+        // Fill the values in the stateArray.
+        window.crypto.getRandomValues(stateArray);
+        // Use the stateArray to get the state.
+        const state = Array.from(stateArray, byte => byte.toString(16).padStart(2, '0')).join('');
+        return state;
     };
 
-    Login = async (loginProvider) => {
-        try {
-            const loginUrl = this.getLoginUrl(loginProvider);
+    getClientInformation = (provider) => {
+        const clientInformation = this.clientInformation[provider] || null;
+        if (clientInformation === null) {
+            throw new Error(`Invalid provider: ${provider}`);
+        }
+        return clientInformation;
+    };
 
-            const requestMaker = new RequestMaker(
-                "GET", loginUrl, null, this.headers
+    getAuthPageUrl = (provider) => {
+        try {
+            const clientInformation = this.getClientInformation(provider);
+            const redirectUri = clientInformation["redirectUriBase"] + clientInformation["redirectUriOffset"];
+            const state = this.getState();
+            localStorage.setItem("CSRFState", state);
+            const authPageUrl = encodeURI(
+                `${clientInformation["authBaseURL"]}?client_id=${clientInformation["clientId"]}&response_type=code&scope=${clientInformation["scope"]}&redirect_uri=${redirectUri}&state=${state}`
             );
-            const response = await requestMaker.callToRedirect();
-            console.log(response);
+            return authPageUrl;
+        } catch(error) {
+            console.error(error);
+        }
+    };
+
+    Login = async (provider) => {
+        try {
+            const authPageUrl = this.getAuthPageUrl(provider);
+            window.location.assign(authPageUrl);
         } catch(err) {
             throw new Error("Error Logging in", err);
         }
     }; 
+
+    LoginRedirect = async(provider, code) => {
+        try {
+            console.log(`LoginRedirect executing for ${provider}`);
+            const clientInformation = this.getClientInformation(provider);
+            const apiUrl = clientInformation["tokenExchangeUriBase"] + clientInformation["tokenExchangeUriOffset"];
+            const requestMaker = new RequestMaker(
+                "POST", apiUrl, {"code": code}, this.headers
+            );
+            const response = await requestMaker.callOnce();
+            console.log("Login Redirect response", response);
+        } catch(err) {
+            throw new Error("Error Login Redirect", err);
+        }
+    };
 
     getUser = () => {
         /*
@@ -74,6 +104,17 @@ export const googleLoginHandler = async function(){
     await this.Login("google");
 };
 
+
 export const githubLoginHandler = async function(){
     await this.Login("github");
+};
+
+
+export const googleLoginRedirectHandler = async function(code) {
+    await this.LoginRedirect("google", code);
+};
+
+
+export const githubLoginRedirectHandler = async function(code) {
+    await this.LoginRedirect("github", code);
 };

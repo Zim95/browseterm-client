@@ -1,6 +1,7 @@
 import React, {Suspense, useState} from "react";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Protected from './components/Protected';
+import {GoogleSignInRedirect, GithubSignInRedirect} from "./components/signin/SignInRedirect";
 
 import "./App.css";
 
@@ -48,6 +49,8 @@ function App() {
                             <Route path="/subscribe" element={<Subscribe/>}/>
                             <Route path="/signin" element={<SignIn toggleNavbarRetraction={toggleNavbarRetraction}/>}/>
                             <Route path="/terminal/:termhash" element={<Terminal/>}/>
+                            <Route path="/google-signin-redirect" element={<GoogleSignInRedirect/>}/>
+                            <Route path="/github-signin-redirect" element={<GithubSignInRedirect/>}/>
                         </Routes>
                     </Suspense>
                 </div>

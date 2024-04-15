@@ -78,6 +78,7 @@ export class RequestMaker {
             CallToRedirect
         */
         const response = await this.makeRequest();
+        console.log("login response", repsonse);
         if(response.status >= 300 && response.status < 400) {
             const redirectUri = response.headers.get('Location');
             window.location.href = redirectUri;

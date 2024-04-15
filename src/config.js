@@ -18,23 +18,31 @@ const configuration = {
             "urls": {
                 "baseURL": "http://localhost:8004/",
                 "imageOptions": "image_options",
-                "me": "@me",
-                "googleLogInUrl": "google-login",
-                "githubLogInUrl": "github-login"
+                "me": "@me"
             },
             "headers": {
                 "Content-Type": "application/json"
             }
         },
-        "authAPI": {
-            "authServerBaseURL": "http://localhost:9001/",
-            "authEndpointOffset": "authorize",
-            "tokenEndpointOffset": "token",
-        },
         "clientInformation": {
-            "clientId": "oauth-client-1",
-            "clientSecret": "oauth-client-secret-1",
-            "redirectURIs": ["http://localhost:8001/"],
+            "google": {
+                "clientId": "885997680869-p7e8e3vhgi68k766hstdd845ot6g0ccc.apps.googleusercontent.com",
+                "authBaseURL": "https://accounts.google.com/o/oauth2/v2/auth",
+                "scope": "openid profile email https://www.googleapis.com/auth/user.birthday.read https://www.googleapis.com/auth/user.gender.read",
+                "redirectUriBase": "http://localhost:8001/",
+                "redirectUriOffset": "google-signin-redirect",
+                "tokenExchangeUriBase": "http://localhost:8004/",
+                "tokenExchangeUriOffset": "google-token-exchange"
+            },
+            "github": {
+                "clientId": "de7c0a9270d9da772472",
+                "authBaseURL": "https://github.com/login/oauth/authorize",
+                "scope": "user:email",
+                "redirectUriBase": "http://localhost:8001/",
+                "redirectUriOffset": "github-signin-redirect",
+                "tokenExchangeUriBase": "http://localhost:8004/",
+                "tokenExchangeUriOffset": "github-token-exchange" 
+            }
         },
     },
     "production": {

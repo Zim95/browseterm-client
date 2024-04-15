@@ -87,7 +87,7 @@
 .signin-header,
 .tagline {
   opacity: 0; /* Initially hide the heading and tagline */
-  animation: fadeIn 1s ease forwards; /* Apply the fadeIn animation */
+  animation: fadeIn 2s ease forwards; /* Apply the fadeIn animation */
 }
 
 @keyframes fadeIn {
