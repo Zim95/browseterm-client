@@ -54,7 +54,7 @@ export class Authorizer {
             const clientInformation = this.getClientInformation(provider);
             const redirectUri = clientInformation["redirectUriBase"] + clientInformation["redirectUriOffset"];
             const state = this.getState();
-            localStorage.setItem("CSRFState", state);
+            localStorage.setItem("CSRFState", state); // FIX THIS: Why is it not setting the Item.
             const authPageUrl = encodeURI(
                 `${clientInformation["authBaseURL"]}?client_id=${clientInformation["clientId"]}&response_type=code&scope=${clientInformation["scope"]}&redirect_uri=${redirectUri}&state=${state}`
             );
@@ -83,6 +83,7 @@ export class Authorizer {
             );
             const response = await requestMaker.callOnce();
             console.log("Login Redirect response", response);
+            return response;
         } catch(err) {
             throw new Error("Error Login Redirect", err);
         }
@@ -101,20 +102,37 @@ export class Authorizer {
 
 
 export const googleLoginHandler = async function(){
-    await this.Login("google");
+    try {
+        await this.Login("google");
+    } catch(error) {
+        console.error(error);
+    }
 };
 
 
 export const githubLoginHandler = async function(){
-    await this.Login("github");
-};
+    try {
+        await this.Login("github");
+    } catch(error) {
+        console.error(error);
+    }};
 
 
 export const googleLoginRedirectHandler = async function(code) {
-    await this.LoginRedirect("google", code);
+    try {
+        const response = await this.LoginRedirect("google", code);
+        console.log("Response from googleLoginRedirectHandler", response);
+        return response;
+    } catch (error) {
+        return {"error": error};
+    }
 };
 
 
 export const githubLoginRedirectHandler = async function(code) {
-    await this.LoginRedirect("github", code);
+    try {
+        return await this.LoginRedirect("github", code);
+    } catch (error) {
+        return {"error": error};
+    }
 };

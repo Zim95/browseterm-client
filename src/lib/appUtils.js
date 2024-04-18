@@ -73,22 +73,6 @@ export class RequestMaker {
         return data;
     };
 
-    callToRedirect = async () => {
-        /*
-            CallToRedirect
-        */
-        const response = await this.makeRequest();
-        console.log("login response", repsonse);
-        if(response.status >= 300 && response.status < 400) {
-            const redirectUri = response.headers.get('Location');
-            window.location.href = redirectUri;
-        } else if (response.status !== 200) {
-            const error = await response.text();
-            throw new Error("Make Request Error: " + error);
-        }
-        return await this.parseJSONResponse(response);
-    };
-
     callUntilSuccess = async (maxAttempts=10, timeout=2000) => {
         const sleep = (milliseconds) => new Promise(resolve => setTimeout(resolve, milliseconds));
 

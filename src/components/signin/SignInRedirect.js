@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Authorizer, googleLoginRedirectHandler, githubLoginRedirectHandler } from '../../lib/authUtils';
 import config from "../../config";
 
@@ -17,11 +17,8 @@ const extractSearchParams = (windowUrl) => {
 
 
 const validateState = (state) => {
-    const localStorageState = localStorage.getItem("CSRFState", state);
-    console.log("LocalStorageState", localStorageState);
-    localStorage.removeItem("CSRFState");
+    const localStorageState = localStorage.getItem("CSRFState");
     if(localStorageState !== state) {
-        console.error("State Mismatch!");
         return false;
     }
     return true;
@@ -30,22 +27,45 @@ const validateState = (state) => {
 
 const executeSignInRedirect = async (redirectHandler) => {
     const {code, state} = extractSearchParams(window.location.href);
-    console.log("code and state", code, state);
     if(!validateState(state)){
-        // window.location.assign("http://localhost:8001/signin");
-        console.log("mismatch");
+        // state is invalid, redirect to login.
+        window.location.assign("http://localhost:8001/signin");
+    } else {
+        // call the redirectHandler and wait for response.
+        const response = await redirectHandler.call(authorizer, code);
+        console.log("Response from executeSignInRedirect", response);
+        return response;
     }
-    await redirectHandler.call(authorizer, code);
 };
 
 
-export async function GoogleSignInRedirect() {
-    await executeSignInRedirect(googleLoginRedirectHandler);
+export function GoogleSignInRedirect() {
+    useEffect(() => {
+        async function getRedirectResponse() {
+            try {
+                const response = await executeSignInRedirect(googleLoginRedirectHandler);
+                console.log("Response from useEffect", response);
+            } catch (error) {
+                return {"error": error};
+            }
+        }
+        getRedirectResponse();
+    }, []);
     return <div>GoogleSignInRedirect</div>;
 };
 
 
-export async function GithubSignInRedirect() {
-    await executeSignInRedirect(githubLoginRedirectHandler);
-    return <div>GithubSignInRedirect</div>
+export function GithubSignInRedirect() {
+    useEffect(() => {
+        async function getRedirectResponse() {
+            try {
+                const response = await executeSignInRedirect(githubLoginRedirectHandler);
+                console.log(response);
+            } catch (error) {
+                return {"error": error};
+            }
+        }
+        getRedirectResponse();
+    }, []);
+    return <div>GithubSignInRedirect</div>;
 };
