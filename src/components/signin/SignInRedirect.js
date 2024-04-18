@@ -3,9 +3,6 @@ import { Authorizer, googleLoginRedirectHandler, githubLoginRedirectHandler } fr
 import config from "../../config";
 
 
-const authorizer = new Authorizer(config);
-
-
 const extractSearchParams = (windowUrl) => {
     const url = new URL(windowUrl);
     const searchParams = new URLSearchParams(url.search);
@@ -25,26 +22,26 @@ const validateState = (state) => {
 };
 
 
-const executeSignInRedirect = async (redirectHandler) => {
+const executeSignInRedirect = async (redirectHandler, authorizer) => {
     const {code, state} = extractSearchParams(window.location.href);
     if(!validateState(state)){
         // state is invalid, redirect to login.
         window.location.assign("http://localhost:8001/signin");
     } else {
         // call the redirectHandler and wait for response.
-        const response = await redirectHandler.call(authorizer, code);
-        console.log("Response from executeSignInRedirect", response);
-        return response;
+        return await redirectHandler.call(authorizer, code);
     }
 };
+
 
 
 export function GoogleSignInRedirect() {
     useEffect(() => {
         const getRedirectResponse = async () => {
             try {
-                const response = await executeSignInRedirect(googleLoginRedirectHandler);
-                console.log("Response from useEffect", response);
+                const authorizer = new Authorizer(config);
+                const response = await executeSignInRedirect(googleLoginRedirectHandler, authorizer);
+                console.log("Final Response", response);
             } catch (error) {
                 return {"error": error};
             }
@@ -59,8 +56,9 @@ export function GithubSignInRedirect() {
     useEffect(() => {
         const getRedirectResponse = async () => {
             try {
-                const response = await executeSignInRedirect(githubLoginRedirectHandler);
-                console.log("Response from useEffect", response);
+                const authorizer = new Authorizer(config);
+                const response = await executeSignInRedirect(githubLoginRedirectHandler, authorizer);
+                console.log("Final Response", response);
             } catch (error) {
                 return {"error": error};
             }

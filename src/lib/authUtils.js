@@ -75,15 +75,12 @@ export class Authorizer {
 
     LoginRedirect = async(provider, code) => {
         try {
-            console.log(`LoginRedirect executing for ${provider}`);
             const clientInformation = this.getClientInformation(provider);
             const apiUrl = clientInformation["tokenExchangeUriBase"] + clientInformation["tokenExchangeUriOffset"];
             const requestMaker = new RequestMaker(
                 "POST", apiUrl, {"code": code}, this.headers
             );
-            const response = await requestMaker.callOnce();
-            console.log("Login Redirect response", response);
-            return response;
+            return await requestMaker.callOnce();
         } catch(err) {
             throw new Error("Error Login Redirect", err);
         }
@@ -120,9 +117,7 @@ export const githubLoginHandler = async function(){
 
 export const googleLoginRedirectHandler = async function(code) {
     try {
-        const response = await this.LoginRedirect("google", code);
-        console.log("Response from googleLoginRedirectHandler", response);
-        return response;
+        return await this.LoginRedirect("google", code);
     } catch (error) {
         return {"error": error};
     }
