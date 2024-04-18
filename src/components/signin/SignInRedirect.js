@@ -41,7 +41,7 @@ const executeSignInRedirect = async (redirectHandler) => {
 
 export function GoogleSignInRedirect() {
     useEffect(() => {
-        async function getRedirectResponse() {
+        const getRedirectResponse = async () => {
             try {
                 const response = await executeSignInRedirect(googleLoginRedirectHandler);
                 console.log("Response from useEffect", response);
@@ -57,10 +57,10 @@ export function GoogleSignInRedirect() {
 
 export function GithubSignInRedirect() {
     useEffect(() => {
-        async function getRedirectResponse() {
+        const getRedirectResponse = async () => {
             try {
                 const response = await executeSignInRedirect(githubLoginRedirectHandler);
-                console.log(response);
+                console.log("Response from useEffect", response);
             } catch (error) {
                 return {"error": error};
             }
