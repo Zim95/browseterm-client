@@ -30,7 +30,7 @@ export class RequestMaker {
         this.headers = headers;
     }
 
-    makeRequest = async() => {
+    makeRequest = async(credentials=false) => {
         /*
             This is the make request method which makes the request
             based on parameters.
@@ -46,6 +46,9 @@ export class RequestMaker {
         if (this.body !== null) {
             requestOptions.body = JSON.stringify(this.body);
         }
+        if(credentials === true) {
+            requestOptions.credentials = 'include';
+        }
         const response = await fetch(this.url, requestOptions);
         return response;
     };
@@ -56,15 +59,14 @@ export class RequestMaker {
 
             Author: Namah Shrestha
         */
-        const data = await response.json();
-        return data.response;
+        return await response.json();
     };
 
-    callOnce = async() => {
+    callOnce = async(credentials=false) => {
         /*
             CallOnce
         */
-        const response = await this.makeRequest();
+        const response = await this.makeRequest(credentials);
         if (response.status !== 200) {
             const error = await response.text();
             throw new Error("Make Request Error", error);

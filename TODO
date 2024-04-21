@@ -19,3 +19,9 @@ TO Fix:
 1. Scale the websockets.
 2. Get the stream to work properly. - Migrated Code to node.
 3. Clean code.
+
+Immediate:
+-----------
+1. Fix the me renderer.
+2. Remove token exchange endpoint.
+3. Change Login logic back to what it was.

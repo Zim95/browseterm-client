@@ -16,8 +16,13 @@ const configuration = {
         },
         "dataApi": {
             "urls": {
+                "hostBaseURL": "http://localhost:8001",
                 "baseURL": "http://localhost:8004/",
                 "imageOptions": "image_options",
+                "authURLs": {
+                    "google": "google-login",
+                    "github": "github-login"
+                },
                 "me": "@me"
             },
             "headers": {
