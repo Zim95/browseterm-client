@@ -51,7 +51,7 @@ export class Authorizer {
         */
         const userData = JSON.parse(localStorage.getItem("userData"));
         return {
-            "userName": userData["name"]
+            "userName": userData["name"].replace(" ", "_")
         };
     };
 }

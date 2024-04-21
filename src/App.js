@@ -39,7 +39,11 @@ function App() {
                 <div className="app-content">
                     <Suspense fallback={<div>Loading....</div>}>
                         <Routes>
-                            <Route path="/" element={<Home/>}/>
+                            <Route path="/" element={
+                                <Protected>
+                                    <Home/>
+                                </Protected>
+                            }/>
                             <Route path="/profile" element={<Profile/>}/>
                             <Route path="/containers" element={
                                 <Protected>

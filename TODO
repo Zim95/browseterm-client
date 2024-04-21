@@ -22,6 +22,6 @@ TO Fix:
 
 Immediate:
 -----------
-1. Fix the me renderer.
-2. Remove token exchange endpoint.
-3. Change Login logic back to what it was.
+1. Bind a setTimeout handler that gets triggered every now and then. This will complete the login flow.
+2. Implement gRPC on REST-Containers. Rename it to ContainerMaker and use gRPC.
+3. Move the setup to kubernetes completely.
