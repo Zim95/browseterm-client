@@ -25,3 +25,15 @@ Immediate:
 1. Bind a setTimeout handler that gets triggered every now and then. This will complete the login flow.
 2. Implement gRPC on REST-Containers. Rename it to ContainerMaker and use gRPC.
 3. Move the setup to kubernetes completely.
+4. The response of REST-container has response, whereas dataApi does not have it. So, we will have to cater that soon. Before that, we will do the gRPC changes with security and everything.
+
+
+TODO login flow:
+----------------
+1. Implement background task that calls usl for all routes. - Web workers.
+2. Implement context API.
+    - isLoggedIn should only check context API.
+    - The Redirect Handler should call /@me and populate the contextAPI.
+3. Implement Logout.
+4. Fix credentials in fetch api.
+5. All fetch requests in the code need to set credentials to true.

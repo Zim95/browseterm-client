@@ -1,9 +1,12 @@
-import React, {Suspense, useState} from "react";
+import React, {useEffect, Suspense, useState} from "react";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Protected from './components/Protected';
 import {SignInRedirectHandler} from "./components/signin/SignInRedirect";
 
 import "./App.css";
+
+import uslWorkerScript from "./usl.worker";
+
 
 // Lazy load all Routes.
 const Navbar = React.lazy(() => import('./components/navigation/Navbar'));
@@ -31,6 +34,19 @@ function App() {
         const path = window.location.href;
         return !notNeededRoutes.some(route => path.includes(route));
     };
+
+    useEffect(() => {
+        const stopUslWorker = () => {
+            console.log("StopUSLWorker called");
+            const uslWorker = new Worker(uslWorkerScript);
+            uslWorker.postMessage("stop");
+            localStorage.removeItem("uslStarted");
+        };
+        window.addEventListener('beforeunload', stopUslWorker);
+        return () => {
+            window.removeEventListener('beforeunload', stopUslWorker);
+        };
+    }, []);
 
     return (
         <Router>
