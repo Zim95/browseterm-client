@@ -2,6 +2,7 @@ import React, {useEffect, Suspense, useState} from "react";
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Protected from './components/Protected';
 import {SignInRedirectHandler} from "./components/signin/SignInRedirect";
+import Loading from "./components/loading/Loading";
 
 import "./App.css";
 
@@ -20,24 +21,26 @@ const Terminal = React.lazy(() => import('./components/terminal/ContainerTermina
 
 function App() {
     const [isNavbarRetracted, setIsNavbarRetracted] = useState(false);
+    const [isNavbarRequired, setIsNavbarRequired] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     const toggleNavbarRetraction = () => {
         setIsNavbarRetracted(!isNavbarRetracted);
     };
 
-    const isNavbarRequired = () => {
+    const checkNavbarRequired = () => {
         const notNeededRoutes = [
             "/terminal",
             "/signin"
         ];
 
         const path = window.location.href;
-        return !notNeededRoutes.some(route => path.includes(route));
+        const result = !notNeededRoutes.some(route => path.includes(route));
+        setIsNavbarRequired(result);
     };
 
     useEffect(() => {
         const stopUslWorker = () => {
-            console.log("StopUSLWorker called");
             const uslWorker = new Worker(uslWorkerScript);
             uslWorker.postMessage("stop");
             localStorage.removeItem("uslStarted");
@@ -48,25 +51,42 @@ function App() {
         };
     }, []);
 
+    useEffect(() => {
+        /* Check navbar upon: redirect, back and front buttons */
+        checkNavbarRequired();
+    }, [window.location.pathname]);
+
     return (
         <Router>
-            <div className={`wrapper ${isNavbarRequired() ? (isNavbarRetracted ? 'retracted' : '') : 'retracted'}`}>
-                {isNavbarRequired() && <Navbar onToggleRetraction={toggleNavbarRetraction}/>}
+            {isLoading && <Loading/>}
+            <div className={`wrapper ${isNavbarRequired ? (isNavbarRetracted ? 'retracted' : '') : 'retracted'}`}>
+                {isNavbarRequired && <Navbar onToggleRetraction={toggleNavbarRetraction}/>}
                 <div className="app-content">
-                    <Suspense fallback={<div>Loading....</div>}>
+                    <Suspense fallback={
+                            <div>Loading...</div>
+                        }
+                    >
                         <Routes>
                             <Route path="/" element={
-                                <Protected>
+                                <Protected setIsLoading={setIsLoading}>
                                     <Home/>
                                 </Protected>
                             }/>
-                            <Route path="/profile" element={<Profile/>}/>
+                            <Route path="/profile" element={
+                                <Protected setIsLoading={setIsLoading}>
+                                    <Profile/>
+                                </Protected>
+                            }/>
                             <Route path="/containers" element={
-                                <Protected>
+                                <Protected setIsLoading={setIsLoading}>
                                     <Containers/>
                                 </Protected>
                             }/>
-                            <Route path="/subscribe" element={<Subscribe/>}/>
+                            <Route path="/subscribe" element={
+                                <Protected setIsLoading={setIsLoading}>
+                                    <Subscribe/>
+                                </Protected>
+                            }/>
                             <Route path="/signin" element={<SignIn toggleNavbarRetraction={toggleNavbarRetraction}/>}/>
                             <Route path="/terminal/:termhash" element={<Terminal/>}/>
                             <Route path="signin-redirect" element={<SignInRedirectHandler/>}/>

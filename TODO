@@ -30,10 +30,21 @@ Immediate:
 
 TODO login flow:
 ----------------
-1. Implement background task that calls usl for all routes. - Web workers.
+1. Implement background task that calls usl for all routes. - Web workers - Make sure config works.
 2. Implement context API.
     - isLoggedIn should only check context API.
     - The Redirect Handler should call /@me and populate the contextAPI.
+   Update:
+    - This wont work.
+    - First off contextApi is useless once the browser closes.
+    - If we replace contextApi with localStorage, and check to see if userData exists in localStorage, then it will always be there unless removed.
+    - The only way you are logged out is if your session expires on the server.
+    - If you are active on the browser, you send a session usl update every 29 minutes.
+    - So even if a user comes back after closing the browser, user doesnt have to login.
+    - This means you will never be logged out when youre active meaning you can never delete the localStorage when youre active.
+    - The localStorage can only be deleted 30 minutes after you close the browser, which is again not possible.
+    - So we are going to have to stick to the current approach. 
+    - Instead we are going to implement a loading screen.
 3. Implement Logout.
 4. Fix credentials in fetch api.
 5. All fetch requests in the code need to set credentials to true.

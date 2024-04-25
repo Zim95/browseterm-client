@@ -1,7 +1,8 @@
 const uslWorkerCode = () => {
     function uslRequest() {
+        const uslUrl = "http://localhost:8004/usl";
         fetch(
-            "http://localhost:8004/usl",
+            uslUrl,
             {
                 method: "GET",
                 credentials: 'include',
@@ -19,10 +20,11 @@ const uslWorkerCode = () => {
     }
 
     self.onmessage = (e) => {
+        const uslTimeout = 29 * 60 * 1000;
         let intervalId;
         switch(e.data) {
             case "start":
-                intervalId = setInterval(uslRequest, 29 * 60 * 1000);
+                intervalId = setInterval(uslRequest, uslTimeout);
                 console.log("Started Usl Interval");
                 break;
             case "stop":

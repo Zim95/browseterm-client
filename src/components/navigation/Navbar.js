@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import './navbar.css'; // Import your CSS file
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faDocker} from "@fortawesome/free-brands-svg-icons";
-import { faBars, faHouse, faUser, faCartShopping, faRightToBracket } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faHouse, faUser, faCartShopping, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 
 function Navbar({onToggleRetraction}) {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -41,8 +41,8 @@ function Navbar({onToggleRetraction}) {
             </Link>
           </li>
           <li className="nav-item">
-            <Link to="/signin" className="nav-a">
-              <FontAwesomeIcon icon={faRightToBracket} className="fas"/><span className="nav-span">SignIn</span>
+            <Link to="/signout" className="nav-a">
+              <FontAwesomeIcon icon={faRightFromBracket} className="fas"/><span className="nav-span">SignOut</span>
             </Link>
           </li>
       </ul>
