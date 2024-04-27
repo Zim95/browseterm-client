@@ -20,7 +20,6 @@ function Protected({children, setIsLoading}) {
 
     switch(accessible) {
         case true:
-            console.log("accessible is", accessible);
             const uslStarted = localStorage.getItem("uslStarted") || false;
             if(!uslStarted) {
                 const uslWorker = new Worker(uslWorkerScript);
@@ -30,11 +29,9 @@ function Protected({children, setIsLoading}) {
             setIsLoading(false);
             return children;
         case false:
-            console.log("accessible is", accessible);
             localStorage.setItem("redirectPath", window.location.pathname);
             return <Navigate to="/signin"/>;
         case null:
-            console.log("accessible is", accessible);
             setIsLoading(true);
             return (
                 <div className="expanded-centered">

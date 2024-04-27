@@ -54,6 +54,18 @@ export class Authorizer {
             "userName": userData["name"].replace(" ", "_")
         };
     };
+
+    Logout = async () => {
+        const requestMaker = new RequestMaker(
+            "GET", this.meURL, null, this.headers
+        );
+        try {
+            await requestMaker.callOnce(true);
+            localStorage.removeItem("userData");
+        } catch (err) {
+            throw new Error("Error Loggin out", err);
+        }
+    }
 }
 
 
@@ -73,3 +85,12 @@ export const githubLoginHandler = async function(){
         console.error(error);
     }
 };
+
+
+export const logoutHandler = async function() {
+    try {
+        await this.Logout();
+    } catch(error) {
+        console.error(error);
+    }
+}

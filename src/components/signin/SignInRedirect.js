@@ -7,7 +7,7 @@ const redirectToPath = (hostBaseURL) => {
     const redirectPath = localStorage.getItem("redirectPath") || "/";
     const redirectUri = `${hostBaseURL}${redirectPath}`;
     localStorage.removeItem("redirectPath");
-    
+
     window.location.assign(redirectUri);
 };
 

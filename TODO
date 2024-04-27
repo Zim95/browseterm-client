@@ -46,5 +46,12 @@ TODO login flow:
     - So we are going to have to stick to the current approach. 
     - Instead we are going to implement a loading screen.
 3. Implement Logout.
+    - Frontend:
+        - Logout will delete userData.
+        - Logout will delete uslStarted.
+        - This is a protected route.
+    - Backend:
+        - logout will delete session.
+        - This is a protected route.
 4. Fix credentials in fetch api.
 5. All fetch requests in the code need to set credentials to true.

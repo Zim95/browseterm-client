@@ -10,12 +10,13 @@ import { Authorizer, googleLoginHandler, githubLoginHandler } from '../../lib/au
 import config from '../../config';
 
 
-function SignIn({toggleNavbarRetraction}) {
+function SignIn({toggleNavbarRetraction, setIsLoading}) {
 
   const authorizer = new Authorizer(config);
 
   useEffect(() => {
     toggleNavbarRetraction();
+    setIsLoading(false);
   }, []);
 
   return (

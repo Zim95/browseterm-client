@@ -87,7 +87,12 @@ function App() {
                                     <Subscribe/>
                                 </Protected>
                             }/>
-                            <Route path="/signin" element={<SignIn toggleNavbarRetraction={toggleNavbarRetraction}/>}/>
+                            <Route path="/signin" element={
+                                <SignIn 
+                                    toggleNavbarRetraction={toggleNavbarRetraction}
+                                    setIsLoading={setIsLoading}
+                                />
+                            }/>
                             <Route path="/terminal/:termhash" element={<Terminal/>}/>
                             <Route path="signin-redirect" element={<SignInRedirectHandler/>}/>
                         </Routes>
