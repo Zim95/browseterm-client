@@ -6,6 +6,7 @@
 
 // Module imports
 import { RequestMaker } from "./appUtils";
+import uslWorkerScript from "../usl.worker";
 
 
 export class Authorizer {
@@ -15,6 +16,7 @@ export class Authorizer {
         this.meURL = this.baseURL + config.dataApi.urls.me;
         this.hostBaseURL = config.dataApi.urls.hostBaseURL;
         this.authURLs = config.dataApi.urls.authURLs;
+        this.logout = this.baseURL + this.authURLs.logout;
         this.clientInformation = config.clientInformation;
         this.headers = config.dataApi.headers;
     }
@@ -56,14 +58,14 @@ export class Authorizer {
     };
 
     Logout = async () => {
-        const requestMaker = new RequestMaker(
-            "GET", this.meURL, null, this.headers
+        const logoutRequestMaker = new RequestMaker(
+            "GET", this.logout, null, this.headers
         );
+        console.log("URL", this.logout);
         try {
-            await requestMaker.callOnce(true);
-            localStorage.removeItem("userData");
+            await logoutRequestMaker.callOnce(true);
         } catch (err) {
-            throw new Error("Error Loggin out", err);
+            throw new Error("Error Logging out", err);
         }
     }
 }
@@ -87,9 +89,27 @@ export const githubLoginHandler = async function(){
 };
 
 
+export const startUslWorker = () => {
+    // Function to start usl background worker
+    const uslWorker = new Worker(uslWorkerScript);
+    uslWorker.postMessage("start");
+    localStorage.setItem("uslStarted", true);
+};
+
+
+export const stopUslWorker = () => {
+    // Function to stop usl background worker
+    const uslWorker = new Worker(uslWorkerScript);
+    uslWorker.postMessage("stop");
+    localStorage.removeItem("uslStarted");
+};
+
+
 export const logoutHandler = async function() {
     try {
         await this.Logout();
+        localStorage.removeItem("userData");
+        stopUslWorker();
     } catch(error) {
         console.error(error);
     }

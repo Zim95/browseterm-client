@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { Authorizer } from "../lib/authUtils";
 import config from "../config";
-import uslWorkerScript from "../usl.worker";
+import { startUslWorker } from "../lib/authUtils";
 
 
 function Protected({children, setIsLoading}) {
@@ -11,7 +11,6 @@ function Protected({children, setIsLoading}) {
     useEffect(() => {
         const checkAccess = async () => {
             const authorizer = new Authorizer(config);
-            console.log("Making the auth request check, accessible is", accessible);
             const isLoggedIn = await authorizer.isLoggedIn();
             setAccessible(isLoggedIn);
         };
@@ -22,9 +21,7 @@ function Protected({children, setIsLoading}) {
         case true:
             const uslStarted = localStorage.getItem("uslStarted") || false;
             if(!uslStarted) {
-                const uslWorker = new Worker(uslWorkerScript);
-                uslWorker.postMessage("start");
-                localStorage.setItem("uslStarted", true);
+                startUslWorker();
             }
             setIsLoading(false);
             return children;

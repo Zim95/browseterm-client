@@ -21,7 +21,8 @@ const configuration = {
                 "imageOptions": "image_options",
                 "authURLs": {
                     "google": "google-login",
-                    "github": "github-login"
+                    "github": "github-login",
+                    "logout": "logout"
                 },
                 "me": "@me",
                 "usl": "usl",

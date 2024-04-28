@@ -3,10 +3,11 @@ import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
 import Protected from './components/Protected';
 import {SignInRedirectHandler} from "./components/signin/SignInRedirect";
 import Loading from "./components/loading/Loading";
+import SignOut from "./components/SignOut";
 
 import "./App.css";
 
-import uslWorkerScript from "./usl.worker";
+import { stopUslWorker } from "./lib/authUtils";
 
 
 // Lazy load all Routes.
@@ -40,11 +41,11 @@ function App() {
     };
 
     useEffect(() => {
-        const stopUslWorker = () => {
-            const uslWorker = new Worker(uslWorkerScript);
-            uslWorker.postMessage("stop");
-            localStorage.removeItem("uslStarted");
-        };
+        // const stopUslWorker = () => {
+        //     const uslWorker = new Worker(uslWorkerScript);
+        //     uslWorker.postMessage("stop");
+        //     localStorage.removeItem("uslStarted");
+        // };
         window.addEventListener('beforeunload', stopUslWorker);
         return () => {
             window.removeEventListener('beforeunload', stopUslWorker);
@@ -95,6 +96,7 @@ function App() {
                             }/>
                             <Route path="/terminal/:termhash" element={<Terminal/>}/>
                             <Route path="signin-redirect" element={<SignInRedirectHandler/>}/>
+                            <Route path="signout" element={<SignOut/>}/>
                         </Routes>
                     </Suspense>
                 </div>

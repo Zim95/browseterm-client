@@ -55,3 +55,9 @@ TODO login flow:
         - This is a protected route.
 4. Fix credentials in fetch api.
 5. All fetch requests in the code need to set credentials to true.
+
+
+MAJOR ISSUE:
+--------------
+I was able to send a logout request from localhost:8004/logout.
+We need to check if user agent is the same or not.

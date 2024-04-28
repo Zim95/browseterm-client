@@ -17,5 +17,5 @@ export function SignInRedirectHandler() {
         const authorizer = new Authorizer(config);
         redirectToPath(authorizer.hostBaseURL);
     }, []);
-    return <div>RedirectHandler</div>;
+    return <></>;
 };
