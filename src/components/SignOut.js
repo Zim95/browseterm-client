@@ -14,7 +14,7 @@ function SignOut() {
         }
         signout();
     }, []);
-    return <div>SignOutHandler</div>;
+    return <></>;
 }
 
 
